@@ -1,0 +1,116 @@
+.flight-list-container {
+  font-family: 'Arial', sans-serif;
+  max-width: 90%;
+  margin: 20px auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.search-bar {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.search-bar .form-control{
+  margin-right: 10px;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+.search-bar .btn{
+  border-radius: 5px;
+}
+
+
+.flight-results {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive layout */
+}
+
+.flight-card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.flight-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.flight-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.flight-code {
+  margin: 0;
+  font-size: 1.3em;
+  color: #333;
+}
+
+.airline {
+  margin-left: 10px;
+  color: #777;
+  font-size: 0.9em;
+}
+
+.flight-info {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+  align-items: center;
+
+}
+.departure-info, .arrival-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.departure-image{
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.time-text {
+  color: #888;
+  font-size: 0.9em;
+}
+
+
+.flight-details {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+.ticket-info{
+  margin-bottom: 10px;
+}
+.details-button {
+  width: fit-content;
+  align-self: flex-end; /* Align button to the bottom right */
+}
+
+.bold-text {
+  font-weight: bold;
+}
+.no-flights {
+  font-style: italic;
+  text-align: center;
+  color: #888;
+  grid-column: 1 / -1; /* span all columns */
+}

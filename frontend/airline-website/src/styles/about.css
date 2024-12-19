@@ -1,0 +1,41 @@
+.about__background {
+  background-color: #e8f5e9; /* Màu xanh nhạt */
+  padding: 50px 0;
+}
+
+.about__content {
+  padding: 20px;
+  color: #343a40;
+}
+
+.about__content h1 {
+  color: #007bff;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.about__content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.about__content .quote {
+  font-style: italic;
+  color: #007bff;
+  margin-top: 20px;
+}
+
+.about__image-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.about__image {
+  border-radius: 50%;
+  width: 200px; /* Kích thước vừa phải */
+  height: 200px;
+  object-fit: cover;
+  border: 3px solid #007bff; /* Viền xanh */
+}

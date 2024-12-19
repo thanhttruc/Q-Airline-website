@@ -1,0 +1,99 @@
+.flight-details-container {
+  max-width: 80%;
+  margin: 20px auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+.flight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.flight-title {
+  margin: 0;
+  color: #333;
+}
+.flight-header-image{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.flight-info-section{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+.flight-info-left,
+.flight-info-right{
+    display: flex;
+    flex-direction: column;
+}
+.flight-info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    
+}
+
+.info-label {
+    font-weight: bold;
+    width: 150px;
+    margin-right: 5px;
+}
+
+.info-value {
+    color: #555;
+    margin-right: 10px;
+}
+.info-time{
+    color: #777;
+    font-size: 0.9em;
+}
+
+
+.ticket-info-section {
+  margin-top: 20px;
+}
+
+.ticket-heading {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    color: #444;
+}
+
+.ticket-list {
+    list-style: none;
+    padding: 0;
+}
+
+.ticket-item {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ticket-item:last-child{
+  border-bottom: none;
+}
+
+.ticket-type, .ticket-price {
+  font-size: 1em;
+    color: #555;
+}
+
+.bold-text{
+  font-weight: bold;
+  margin-right: 5px;
+}

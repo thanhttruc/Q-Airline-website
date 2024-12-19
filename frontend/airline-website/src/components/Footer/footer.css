@@ -1,0 +1,101 @@
+.footer {
+  background-color: #333;
+  color: #fff;
+  padding: 0.5rem 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.footer__container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.footer__col {
+  flex: 1;
+  padding: 1rem;
+  min-width: 250px;
+}
+
+.footer__col h3,
+.footer__col h4 {
+  margin-bottom: 1rem;
+  color: #eee;
+  display: flex;
+  align-items: center;
+}
+
+.footer__col h3::before {
+  content: '';
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+.footer__col i{
+   margin-right: 0.5rem;
+}
+.footer__col p {
+  margin-bottom: 0.7rem;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+.footer__col a,
+.footer__col a:hover,
+.footer__col a:active,
+.footer__col a:visited{
+  color: #fff;
+  text-decoration: none;
+}
+
+
+.footer__bar {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #555;
+}
+
+.socials {
+  display: flex;
+}
+
+.socials span {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+.socials a{
+  color: #fff;
+  text-decoration: none;
+}
+
+.socials a:hover span{
+   color: #ccc;
+}
+
+.copyright {
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .footer__container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer__col {
+      min-width: auto; /* Allow cols to take up full width on small screens */
+  }
+  .footer__bar {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .socials {
+      margin-bottom: 1rem;
+  }
+}

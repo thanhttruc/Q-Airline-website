@@ -1,0 +1,100 @@
+Tổng quan cho trang đăng nhập
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Kích thước và căn giữa container */
+  .login__container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+    margin: 20px auto;
+  }
+  
+  /* Tiêu đề */
+  .login__form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #333333;
+  }
+  
+  /* FormGroup */
+  .login__form input {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 13px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  .login__form input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+  }
+  
+  /* Nút đăng nhập */
+  .auth__btn {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .auth__btn:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Liên kết đăng ký tài khoản */
+  .login__form p {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555555;
+  }
+  
+  .login__form p a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .login__form p a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Hiển thị lỗi */
+  .error-text {
+    color: #ff4d4f;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  /* Hiệu ứng d-flex nếu cần */
+  .d-flex {
+    display: flex;
+  }
+  
+  .justify-content-between {
+    justify-content: space-between;
+  }
+  
+  .m-auto {
+    margin: auto;
+  }
+  
