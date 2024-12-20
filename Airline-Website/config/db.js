@@ -5,8 +5,8 @@ const mysql = require('mysql2/promise');
 const dbConfig = {
   host: 'localhost',
   user: 'root',           
-  password: 'trucdang02',          
-  database: 'airline01_db', 
+  password: '',          
+  database: 'airline01_db',
 };
 
 // Tạo kết nối đến MySQL khi ứng dụng bắt đầu
@@ -154,13 +154,15 @@ const createOrderDetailsTable = `
 `;
 const createPromotionsTable = `
   CREATE TABLE IF NOT EXISTS promotions (
-    id INT AUTO_INCREMENT PRIMARY KEY,  
-    title VARCHAR(255) NOT NULL,  
-    description TEXT NOT NULL, 
-    start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,  
-    end_date  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-    status ENUM('Active', 'Inactive') NOT NULL DEFAULT 'Active'  
-  );
+  id INT AUTO_INCREMENT PRIMARY KEY,  
+  title VARCHAR(255) NOT NULL,  
+  description TEXT NOT NULL, 
+  start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,  
+  end_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+  status ENUM('Active', 'Inactive') NOT NULL DEFAULT 'Active', 
+  image LONGBLOB NOT NULL
+);
+
 `;
 
 

@@ -22,16 +22,19 @@ async function getAllUsers() {
 
 // Hàm tạo mới người dùng
 async function createUser(userData) {
-    const connection = await connectDB();
-    const { username, password, email, full_name } = userData;
-  
-    const result = await connection.query(
-      'INSERT INTO users (username, password, email, full_name) VALUES (?, ?, ?, ?)',
-      [username, password, email, full_name]
-    );
-  
-    return result[0]; // Trả về kết quả chèn dữ liệu
-  }
+  const connection = await connectDB();
+  const { username, password, email, full_name, role } = userData;
+
+  // Nếu role không được cung cấp hoặc không phải là 'admin', gán mặc định là 'customer'
+  const userRole = (role === 'admin') ? 'admin' : 'customer';
+
+  const result = await connection.query(
+    'INSERT INTO users (username, password, email, full_name, role) VALUES (?, ?, ?, ?, ?)',
+    [username, password, email, full_name, userRole]
+  );
+
+  return result[0]; // Trả về kết quả chèn dữ liệu
+}
   
   // Hàm tạo tài khoản admin mặc định nếu chưa có tài khoản admin00
     async function createDefaultAdmin() {

@@ -1,59 +1,97 @@
 {
   "locations": [
-    {"name": "Hà Nội", "description": "Thủ đô của Việt Nam"},
-    {"name": "TP.HCM", "description": "Thành phố lớn nhất Việt Nam"},
-    {"name": "Đà Nẵng", "description": "Thành phố biển nổi tiếng"},
-    {"name": "Nha Trang", "description": "Thành phố biển đẹp của Việt Nam"},
-    {"name": "Phú Quốc", "description": "Đảo nghỉ dưỡng nổi tiếng"}
+    { "name": "Hà Nội", "description": "Thủ đô của Việt Nam" },
+    { "name": "TP.HCM", "description": "Thành phố lớn nhất Việt Nam" },
+    { "name": "Đà Nẵng", "description": "Thành phố ven biển miền Trung" },
+    { "name": "Nha Trang", "description": "Thành phố biển đẹp" },
+    { "name": "Cần Thơ", "description": "Thành phố lớn của đồng bằng sông Cửu Long" },
+    { "name": "Huế", "description": "Thành phố cổ kính, di tích lịch sử" },
+    { "name": "Quy Nhơn", "description": "Thành phố biển với bãi biển đẹp" },
+    { "name": "Phú Quốc", "description": "Đảo thiên đường với bãi biển tuyệt đẹp" },
+    { "name": "Vũng Tàu", "description": "Thành phố biển, nghỉ dưỡng lý tưởng" },
+    { "name": "Sapa", "description": "Thị trấn miền núi với cảnh quan hùng vĩ" }
   ],
   "ticket_types": [
-    {"name": "Phổ thông", "description": "Vé thông thường", "category": "Adult", "trip_type": "Round-trip", "airline": "VietJet Air"},
-    {"name": "Thương gia", "description": "Vé hạng thương gia", "category": "Adult", "trip_type": "One-way", "airline": "Vietnam Airlines"},
-    {"name": "Business", "description": "Vé hạng Business", "category": "Adult", "trip_type": "Round-trip", "airline": "Bamboo Airways"},
-    {"name": "Economy", "description": "Vé hạng Economy", "category": "Child", "trip_type": "One-way", "airline": "VietJet Air"},
-    {"name": "Infant", "description": "Vé cho trẻ em", "category": "Infant", "trip_type": "Round-trip", "airline": "Vietnam Airlines"}
+    { "name": "Phổ thông", "description": "Hạng vé thông thường", "category": "Adult", "trip_type": "One-way", "airline": "Vietnam Airlines" },
+    { "name": "Thương gia", "description": "Hạng vé cao cấp", "category": "Adult", "trip_type": "Round-trip", "airline": "VietJet Air" },
+    { "name": "Business", "description": "Hạng vé doanh nhân", "category": "Adult", "trip_type": "One-way", "airline": "Bamboo Airways" },
+    { "name": "Economy", "description": "Hạng vé phổ thông", "category": "Child", "trip_type": "Round-trip", "airline": "Vietnam Airlines" },
+    { "name": "Thương gia", "description": "Hạng vé cao cấp", "category": "Infant", "trip_type": "One-way", "airline": "VietJet Air" },
+    { "name": "First Class", "description": "Hạng vé cao cấp nhất", "category": "Adult", "trip_type": "Round-trip", "airline": "Singapore Airlines" },
+    { "name": "Phổ thông", "description": "Hạng vé thông thường", "category": "Adult", "trip_type": "One-way", "airline": "Cathay Pacific" },
+    { "name": "Business", "description": "Hạng vé doanh nhân", "category": "Child", "trip_type": "Round-trip", "airline": "Emirates" },
+    { "name": "Economy", "description": "Hạng vé phổ thông", "category": "Adult", "trip_type": "Round-trip", "airline": "Jetstar Pacific" },
+    { "name": "Thương gia", "description": "Hạng vé cao cấp", "category": "Adult", "trip_type": "One-way", "airline": "Qatar Airways" }
   ],
   "airplanes": [
-    {"airplane_code": "VN-A123", "manufacturer": "Airbus", "model": "A320", "seat_count": 180, "description": "Máy bay Airbus A320 hạng phổ thông"},
-    {"airplane_code": "VJ-A456", "manufacturer": "Boeing", "model": "737", "seat_count": 200, "description": "Máy bay Boeing 737 hạng thương gia"},
-    {"airplane_code": "BB-A789", "manufacturer": "Airbus", "model": "A321", "seat_count": 220, "description": "Máy bay Airbus A321 hạng business"}
+    { "airplane_code": "VN001", "manufacturer": "Boeing", "model": "Boeing 787", "seat_count": 200, "description": "Máy bay Boeing 787" },
+    { "airplane_code": "VN002", "manufacturer": "Airbus", "model": "Airbus A320", "seat_count": 180, "description": "Máy bay Airbus A320" },
+    { "airplane_code": "VJ001", "manufacturer": "Airbus", "model": "Airbus A321", "seat_count": 220, "description": "Máy bay Airbus A321" },
+    { "airplane_code": "VJ002", "manufacturer": "Boeing", "model": "Boeing 737", "seat_count": 190, "description": "Máy bay Boeing 737" },
+    { "airplane_code": "BA001", "manufacturer": "Boeing", "model": "Boeing 777", "seat_count": 250, "description": "Máy bay Boeing 777" },
+    { "airplane_code": "SQ001", "manufacturer": "Airbus", "model": "Airbus A380", "seat_count": 500, "description": "Máy bay Airbus A380" },
+    { "airplane_code": "CX001", "manufacturer": "Boeing", "model": "Boeing 787-9", "seat_count": 240, "description": "Máy bay Boeing 787-9" },
+    { "airplane_code": "EK001", "manufacturer": "Airbus", "model": "Airbus A350", "seat_count": 280, "description": "Máy bay Airbus A350" },
+    { "airplane_code": "JL001", "manufacturer": "Boeing", "model": "Boeing 777-300ER", "seat_count": 380, "description": "Máy bay Boeing 777-300ER" },
+    { "airplane_code": "NH001", "manufacturer": "Boeing", "model": "Boeing 747", "seat_count": 400, "description": "Máy bay Boeing 747" }
   ],
   "flights": [
-    {"flight_code": "VN123", "departure_location_id": 1, "arrival_location_id": 2, "departure_time": "2024-12-15 08:00:00", "arrival_time": "2024-12-15 10:00:00", "airline": "Vietnam Airlines", "status": "Scheduled", "airplane_id": 1},
-    {"flight_code": "VJ456", "departure_location_id": 2, "arrival_location_id": 3, "departure_time": "2024-12-16 14:00:00", "arrival_time": "2024-12-16 16:00:00", "airline": "VietJet Air", "status": "Scheduled", "airplane_id": 2},
-    {"flight_code": "BB789", "departure_location_id": 3, "arrival_location_id": 4, "departure_time": "2024-12-17 18:00:00", "arrival_time": "2024-12-17 20:00:00", "airline": "Bamboo Airways", "status": "Scheduled", "airplane_id": 3},
-    {"flight_code": "VN456", "departure_location_id": 2, "arrival_location_id": 2, "departure_time": "2024-12-15 08:00:00", "arrival_time": "2024-12-15 10:00:00", "airline": "Vietnam Airlines", "status": "Scheduled", "airplane_id": 1},
-    {"flight_code": "BB678", "departure_location_id": 3, "arrival_location_id": 1, "departure_time": "2024-12-15 08:00:00", "arrival_time": "2024-12-15 10:00:00", "airline": "Vietnam Airlines", "status": "Scheduled", "airplane_id": 1}
-
+    { "flight_code": "VN007", "departure_location_id": 1, "arrival_location_id": 2, "departure_time": "2024-12-20 10:00:00", "arrival_time": "2024-12-20 12:00:00", "airline": "Vietnam Airlines", "status": "Scheduled", "airplane_id": 1 },
+    { "flight_code": "VJ007", "departure_location_id": 2, "arrival_location_id": 3, "departure_time": "2024-12-20 14:00:00", "arrival_time": "2024-12-20 15:30:00", "airline": "VietJet Air", "status": "Scheduled", "airplane_id": 2 },
+    { "flight_code": "VN008", "departure_location_id": 3, "arrival_location_id": 4, "departure_time": "2024-12-21 09:00:00", "arrival_time": "2024-12-21 10:30:00", "airline": "Vietnam Airlines", "status": "Scheduled", "airplane_id": 3 },
+    { "flight_code": "VJ008", "departure_location_id": 4, "arrival_location_id": 5, "departure_time": "2024-12-21 11:00:00", "arrival_time": "2024-12-21 13:00:00", "airline": "VietJet Air", "status": "Scheduled", "airplane_id": 4 },
+    { "flight_code": "VN009", "departure_location_id": 1, "arrival_location_id": 5, "departure_time": "2024-12-22 08:00:00", "arrival_time": "2024-12-22 09:30:00", "airline": "Vietnam Airlines", "status": "Scheduled", "airplane_id": 5 },
+    { "flight_code": "SQ001", "departure_location_id": 6, "arrival_location_id": 3, "departure_time": "2024-12-25 15:00:00", "arrival_time": "2024-12-25 17:30:00", "airline": "Singapore Airlines", "status": "Scheduled", "airplane_id": 6 },
+    { "flight_code": "CX001", "departure_location_id": 7, "arrival_location_id": 8, "departure_time": "2024-12-26 09:30:00", "arrival_time": "2024-12-26 11:00:00", "airline": "Cathay Pacific", "status": "Scheduled", "airplane_id": 7 },
+    { "flight_code": "EK001", "departure_location_id": 5, "arrival_location_id": 6, "departure_time": "2024-12-27 18:00:00", "arrival_time": "2024-12-27 19:30:00", "airline": "Emirates", "status": "Scheduled", "airplane_id": 8 },
+    { "flight_code": "JL001", "departure_location_id": 8, "arrival_location_id": 9, "departure_time": "2024-12-28 14:30:00", "arrival_time": "2024-12-28 16:00:00", "airline": "Japan Airlines", "status": "Scheduled", "airplane_id": 9 },
+    { "flight_code": "NH001", "departure_location_id": 9, "arrival_location_id": 7, "departure_time": "2024-12-29 06:30:00", "arrival_time": "2024-12-29 08:00:00", "airline": "All Nippon Airways", "status": "Scheduled", "airplane_id": 10 }
   ],
   "prices": [
-    {"flight_id": 1, "ticket_type_id": 1, "price": 500},
-    {"flight_id": 2, "ticket_type_id": 2, "price": 1200},
-    {"flight_id": 3, "ticket_type_id": 3, "price": 800},
-    {"flight_id": 4, "ticket_type_id": 4, "price": 400},
-    {"flight_id": 5, "ticket_type_id": 5, "price": 300}
+    { "flight_id": 1, "ticket_type_id": 1, "price": 1500000 },
+    { "flight_id": 2, "ticket_type_id": 2, "price": 2000000 },
+    { "flight_id": 3, "ticket_type_id": 3, "price": 2500000 },
+    { "flight_id": 4, "ticket_type_id": 4, "price": 1200000 },
+    { "flight_id": 5, "ticket_type_id": 5, "price": 3000000 },
+    { "flight_id": 6, "ticket_type_id": 6, "price": 3500000 },
+    { "flight_id": 7, "ticket_type_id": 7, "price": 2200000 },
+    { "flight_id": 8, "ticket_type_id": 8, "price": 2700000 },
+    { "flight_id": 9, "ticket_type_id": 9, "price": 3300000 },
+    { "flight_id": 10, "ticket_type_id": 10, "price": 3800000 }
   ],
   "users": [
-    {"username": "user1", "password": "password1", "email": "user1@example.com", "full_name": "Nguyễn Văn A"},
-    {"username": "user2", "password": "password2", "email": "user2@example.com", "full_name": "Trần Thị B"},
-    {"username": "admin", "password": "admin123", "email": "admin@example.com", "full_name": "Admin", "role": "admin"}
+    { "username": "john_doe", "password": "password123", "email": "john.doe@email.com", "full_name": "John Doe", "role": "customer" },
+    { "username": "admin", "password": "admin123", "email": "admin@email.com", "full_name": "Admin", "role": "admin" },
+    { "username": "alice_smith", "password": "password123", "email": "alice.smith@email.com", "full_name": "Alice Smith", "role": "customer" },
+    { "username": "bob_jones", "password": "password123", "email": "bob.jones@email.com", "full_name": "Bob Jones", "role": "customer" },
+    { "username": "emily_davis", "password": "password123", "email": "emily.davis@email.com", "full_name": "Emily Davis", "role": "customer" }
   ],
   "orders": [
-    {"user_id": 1, "total_price": 500, "status": "Pending"},
-    {"user_id": 2, "total_price": 1500, "status": "Completed"},
-    {"user_id": 1, "total_price": 1200, "status": "Cancelled"}
+    { "user_id": 1, "total_price": 1500000, "status": "Pending", "voucher_id": 1 },
+    { "user_id": 2, "total_price": 2500000, "status": "Completed", "voucher_id": 2 },
+    { "user_id": 3, "total_price": 2000000, "status": "Pending", "voucher_id": 3 },
+    { "user_id": 4, "total_price": 3000000, "status": "Completed", "voucher_id": 4 },
+    { "user_id": 5, "total_price": 1000000, "status": "Pending", "voucher_id": 5 }
   ],
   "order_details": [
-    {"order_id": 1, "flight_id": 1, "ticket_type_id": 1, "quantity": 1, "price_id": 1},
-    {"order_id": 2, "flight_id": 2, "ticket_type_id": 2, "quantity": 1, "price_id": 2},
-    {"order_id": 3, "flight_id": 3, "ticket_type_id": 3, "quantity": 1, "price_id": 3}
+    { "order_id": 1, "flight_id": 1, "ticket_type_id": 1, "quantity": 1, "price_id": 1 },
+    { "order_id": 2, "flight_id": 2, "ticket_type_id": 2, "quantity": 2, "price_id": 2 },
+    { "order_id": 3, "flight_id": 3, "ticket_type_id": 3, "quantity": 1, "price_id": 3 },
+    { "order_id": 4, "flight_id": 4, "ticket_type_id": 4, "quantity": 1, "price_id": 4 },
+    { "order_id": 5, "flight_id": 5, "ticket_type_id": 5, "quantity": 1, "price_id": 5 }
   ],
   "vouchers": [
-    {"code": "DISCOUNT10", "discount": 10, "expiration_date": "2024-12-31 23:59:59", "status": "Active"},
-    {"code": "SUMMER15", "discount": 15, "expiration_date": "2024-12-25 23:59:59", "status": "Active"}
+    { "code": "HOLIDAY10", "discount": 10.00, "expiration_date": "2025-01-01 23:59:59", "status": "Active" },
+    { "code": "SUMMER20", "discount": 20.00, "expiration_date": "2025-06-01 23:59:59", "status": "Active" },
+    { "code": "WINTER30", "discount": 30.00, "expiration_date": "2025-12-31 23:59:59", "status": "Active" },
+    { "code": "NEWYEAR50", "discount": 50.00, "expiration_date": "2025-01-01 23:59:59", "status": "Active" },
+    { "code": "BACKTOWORK5", "discount": 5.00, "expiration_date": "2025-09-01 23:59:59", "status": "Active" }
   ],
   "promotions": [
-    {"title": "Giảm giá mùa hè", "description": "Khuyến mãi mùa hè, giảm giá lên đến 15%", "start_date": "2024-06-01 00:00:00", "end_date": "2024-06-30 23:59:59", "status": "Active"},
-    {"title": "Ưu đãi giáng sinh", "description": "Giảm giá cho các chuyến bay dịp giáng sinh", "start_date": "2024-12-01 00:00:00", "end_date": "2024-12-25 23:59:59", "status": "Active"}
+    { "title": "Khuyến mãi Tết", "description": "Giảm giá cho các chuyến bay trong dịp Tết", "start_date": "2025-01-01 00:00:00", "end_date": "2025-01-31 23:59:59", "status": "Active", "image": "https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/08/Hinh-nen-Tet-15.jpg" },
+    { "title": "Giảm giá mùa hè", "description": "Chương trình giảm giá mùa hè cho các chuyến bay đến Nha Trang.", "start_date": "2025-06-01 00:00:00", "end_date": "2025-08-31 23:59:59", "status": "Active", "image": "https://socital.com/wp-content/uploads/2020/05/summer-popup-3.jpg" },
+    { "title": "Giảm giá Black Friday", "description": "Khuyến mãi Black Friday dành cho khách hàng đặt vé sớm", "start_date": "2025-11-01 00:00:00", "end_date": "2025-11-30 23:59:59", "status": "Active", "image": "https://prezibase.com/wp-content/uploads/2022/09/black-friday-banner-templates.jpg" },
+    { "title": "Khuyến mãi Noel", "description": "Giảm giá cho các chuyến bay trong dịp Giáng sinh", "start_date": "2025-12-01 00:00:00", "end_date": "2025-12-25 23:59:59", "status": "Active", "image": "https://png.pngtree.com/thumb_back/fh260/background/20210907/pngtree-christmas-plant-gold-color-ball-five-pointed-star-decoration-background-image_794984.jpg" },
+    { "title": "Giảm giá chào mừng năm mới", "description": "Chương trình giảm giá cho các chuyến bay đầu năm mới", "start_date": "2025-01-01 00:00:00", "end_date": "2025-01-15 23:59:59", "status": "Active", "image": "https://www.shutterstock.com/image-vector/2024-new-year-background-podium-260nw-2395873269.jpg" }
   ]
 }

@@ -104,6 +104,18 @@ router.get('/locations', async (req, res) => {
   }
 });
 
+
+  // API để lấy số lần mỗi location xuất hiện trong đơn hàng
+  router.get('/lcount', async (req, res) => {
+    try {
+      const locations = await locationModel.getLocationOrderCount();  // Gọi hàm getLocationOrderCount từ db
+      res.json({ data: locations });  // Trả về dữ liệu với mảng các location và số lần chọn
+    } catch (error) {
+      console.error('Error fetching location order count:', error);
+      res.status(500).json({ message: 'Error retrieving location order count' });
+    }
+  });
+
 // Endpoint để lấy danh sách loại vé
 router.get('/ticket-types', async (req, res) => {
   const ticketTypes = await ticketTypeModel.getAllTicketTypes();
@@ -126,6 +138,8 @@ router.get('/users', async (req, res) => {
       res.status(500).json({ message: 'Error retrieving users' });
     }
   });
+
+
   
   // Route để tạo người dùng mới
   router.post('/users', async (req, res) => {

@@ -2,6 +2,7 @@ const mysql = require('mysql2');
 const fs = require('fs');
 const path = require('path');
 const { connectDB } = require('../config/db');  // Kết nối cơ sở dữ liệu
+const bcrypt = require('bcryptjs');
 
 // Đọc dữ liệu từ tệp JSON
 const loadDataFromFile = (filePath) => {
@@ -62,18 +63,15 @@ async function loadData() {
     }
 
     // Chèn dữ liệu vào bảng users
-const bcrypt = require('bcryptjs');
+    for (const user of data.users) {
+      // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+      const hashedPassword = await bcrypt.hash(user.password, 10);
 
-// Chèn dữ liệu vào bảng users
-for (const user of data.users) {
-  // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
-  const hashedPassword = await bcrypt.hash(user.password, 10);
+      const insertUserQuery = 'INSERT INTO users (username, password, email, full_name, role) VALUES (?, ?, ?, ?, ?)';
+      await connection.query(insertUserQuery, [user.username, hashedPassword, user.email, user.full_name, user.role]);
 
-  const insertUserQuery = 'INSERT INTO users (username, password, email, full_name, role) VALUES (?, ?, ?, ?, ?)';
-  await connection.query(insertUserQuery, [user.username, hashedPassword, user.email, user.full_name, user.role]);
-
-  console.log(`Đã chèn người dùng: ${user.username}`);
-}
+      console.log(`Đã chèn người dùng: ${user.username}`);
+    }
 
     // Chèn dữ liệu vào bảng orders
     for (const order of data.orders) {
@@ -96,10 +94,10 @@ for (const user of data.users) {
       console.log(`Đã chèn voucher: ${voucher.code}`);
     }
 
-    // Chèn dữ liệu vào bảng promotions
+    // Chèn dữ liệu vào bảng promotions (Cập nhật với trường image)
     for (const promotion of data.promotions) {
-      const insertPromotionQuery = 'INSERT INTO promotions (title, description, start_date, end_date, status) VALUES (?, ?, ?, ?, ?)';
-      await connection.query(insertPromotionQuery, [promotion.title, promotion.description, promotion.start_date, promotion.end_date, promotion.status]);
+      const insertPromotionQuery = 'INSERT INTO promotions (title, description, start_date, end_date, status, image) VALUES (?, ?, ?, ?, ?, ?)';
+      await connection.query(insertPromotionQuery, [promotion.title, promotion.description, promotion.start_date, promotion.end_date, promotion.status, promotion.image]);
       console.log(`Đã chèn khuyến mãi: ${promotion.title}`);
     }
 
