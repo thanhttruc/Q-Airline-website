@@ -1,10 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+
+
 const { createPromotion } = require('../models/promotionModel'); 
 const locationModel = require('../models/locationModel'); 
 const airplaneModel = require('../models/airplaneModel');
 const { createPrice, updatePrice, updatePriceByFlightAndTicketType} = require('../models/priceModel');
 const orderModel = require('../models/orderModel');  // Import model
+
+// Cấu hình multer để lưu trữ ảnh
+const storage = multer.memoryStorage();  // Lưu ảnh trong bộ nhớ dưới dạng Buffer
+const upload = multer({ storage: storage });
+
 
 
 
@@ -160,24 +168,92 @@ router.delete('/locations/:id', async (req, res) => {
 });
 
 
+// Route xử lý đăng bài khuyến mại
 // Route xử lý đăng bài khuyến mãi
-router.post('/promotions', async (req, res) => {
+// Route xử lý đăng bài khuyến mãi
+router.post('/promotions', upload.single('image'), async (req, res) => {
   const { title, description, start_date, end_date } = req.body;
+  const image = req.file ? req.file.buffer : null;  // Lấy buffer ảnh từ yêu cầu tải lên
 
+  console.log('Data received in POST request:', req.body);
+
+  // Kiểm tra dữ liệu đầu vào
   if (!title || !description || !start_date || !end_date) {
     return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
   }
 
   try {
-    // Gọi hàm tạo khuyến mãi
-    await createPromotion({ title, description, start_date, end_date });
+    // Tạo HTML cho mô tả với liên kết (nếu có ID khuyến mãi)
+    const promotionId = Date.now();  // Tạo id tạm thời cho khuyến mãi
+    const descriptionHTML = `<a href="http://localhost:3002/promotion/${promotionId}">${description}</a>`;  // Tạo liên kết cho mô tả
 
-    // Redirect về trang khuyến mãi hoặc thông báo thành công
-    res.status(201).send('Khuyến mãi đã được đăng thành công');
+    // Gọi hàm tạo khuyến mãi với mô tả đã chuyển thành HTML
+    const promotion = await createPromotion({
+      title,
+      description: descriptionHTML,  // Gửi mô tả dưới dạng HTML
+      start_date,
+      end_date,
+      image // Dữ liệu ảnh sẽ là Buffer nếu người dùng tải ảnh lên
+    });
+
+    // Trả về thông tin khuyến mãi vừa được tạo
+    res.status(201).json({
+      message: 'Khuyến mãi đã được đăng thành công',
+      promotion: {
+        id: promotion.id,
+        title: promotion.title,
+        description: promotion.description,  // Mô tả sẽ là HTML với liên kết
+        start_date: promotion.start_date,
+        end_date: promotion.end_date,
+        image: promotion.image ? 'data:image/jpeg;base64,' + promotion.image.toString('base64') : null // Nếu có ảnh thì chuyển thành Base64
+      }
+    });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Lỗi khi đăng khuyến mãi', error: error.message });
   }
 });
+// Route xử lý cập nhật bài khuyến mại
+router.put('/promotions/:id', async (req, res) => {
+  const promotionId = req.params.id;
+  const { title, description, start_date, end_date, image, status } = req.body;
+
+  // Kiểm tra dữ liệu đầu vào
+  if (!title || !description || !start_date || !end_date || !status) {
+    return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
+  }
+
+  try {
+    // Gọi hàm cập nhật khuyến mãi
+    const updatedPromotion = await updatePromotion(promotionId, { title, description, start_date, end_date, image, status });
+
+    if (updatedPromotion.affectedRows > 0) {
+      res.status(200).json({ message: 'Khuyến mãi đã được cập nhật thành công', promotionId });
+    } else {
+      res.status(404).json({ message: 'Không tìm thấy khuyến mãi để cập nhật' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi cập nhật khuyến mãi', error: error.message });
+  }
+});
+// Route xử lý xóa bài khuyến mại
+router.delete('/promotions/:id', async (req, res) => {
+  const promotionId = req.params.id;
+
+  try {
+    // Gọi hàm xóa khuyến mãi
+    const result = await deletePromotion(promotionId);
+
+    if (result.affectedRows > 0) {
+      res.status(200).json({ message: 'Khuyến mãi đã được xóa thành công' });
+    } else {
+      res.status(404).json({ message: 'Không tìm thấy khuyến mãi để xóa' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi khi xóa khuyến mãi', error: error.message });
+  }
+});
+
 
 //Route admin orders
 // API để lấy tất cả các đơn hàng của khách hàng và chi tiết

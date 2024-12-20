@@ -106,6 +106,19 @@ router.get('/logout', (req, res) => {
   });
 });
 
+// API route to get the current session (logged-in user)
+router.get('/session', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Bạn chưa đăng nhập' });  // Not logged in
+  }
+
+  // If logged in, return session data (user information)
+  res.status(200).json({
+    id: req.session.user.id,
+    username: req.session.user.username,
+    role: req.session.user.role
+  });
+});
 
 router.get('/order-details/:user_id', async (req, res) => {
   const userId = parseInt(req.params.user_id);

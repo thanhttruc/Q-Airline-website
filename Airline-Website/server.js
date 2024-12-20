@@ -1,6 +1,9 @@
 const express = require('express');
 const session = require('express-session');
 
+const multer = require('multer');
+
+
 const app = express();
 const path = require('path');
 const { createDefaultAdmin } = require('./models/userModel');
@@ -12,8 +15,36 @@ const { connectDB } = require('./config/db');
 const { clearData } = require('./utils/clearData');  // Thêm clearData
 
 // Middleware để parse JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Cấu hình body-parser để xử lý các yêu cầu có payload lớn hơn
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+
+// Cấu hình thư mục tải ảnh (tùy chỉnh đường dẫn nếu cần)
+const upload = multer({
+  dest: 'uploads/', // Lưu ảnh vào thư mục "uploads"
+  limits: { fileSize: 50 * 1024 * 1024 },  // Giới hạn kích thước ảnh là 50MB
+  fileFilter: (req, file, cb) => {
+    // Kiểm tra loại file (ví dụ chỉ cho phép hình ảnh)
+    const fileTypes = /jpeg|jpg|png|gif/;
+    const mimeType = fileTypes.test(file.mimetype);
+    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+
+    if (mimeType && extname) {
+      return cb(null, true);
+    } else {
+      return cb(new Error('Chỉ cho phép tải lên ảnh'));
+    }
+  }
+});
+
+// Tải ảnh lên server
+app.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send({ message: 'Không có file được tải lên.' });
+  }
+  res.status(200).send({ message: 'Tải ảnh thành công!', file: req.file });
+});
 
 // Cấu hình Express để phục vụ các tệp tĩnh từ thư mục public
 app.use(express.static(path.join(__dirname, 'public')));

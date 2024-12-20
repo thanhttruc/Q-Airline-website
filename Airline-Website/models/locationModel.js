@@ -64,10 +64,49 @@ async function deleteLocation(id) {
   return result[0]; // Trả về kết quả xóa dữ liệu
 }
 
+
+// Hàm tính toán số lần mỗi location xuất hiện trong đơn hàng
+async function getLocationOrderCount() {
+  const connection = await connectDB();
+
+  try {
+    // Truy vấn số lần mỗi location được chọn trong các đơn hàng
+    const [rows] = await connection.query(`
+      SELECT
+        l.id AS location_id,
+        l.name AS location_name,
+        COUNT(DISTINCT od.order_id) AS order_count
+      FROM locations l
+      LEFT JOIN flights f ON f.departure_location_id = l.id OR f.arrival_location_id = l.id
+      LEFT JOIN order_details od ON od.flight_id = f.id
+      GROUP BY l.id
+      ORDER BY order_count DESC;
+    `);
+
+    if (rows.length === 1) {
+      return rows[0];  // Nếu chỉ có một location, trả về kết quả là đối tượng đơn
+    } else if (rows.length > 1) {
+      const locationsObj = {};  // Nếu có nhiều hơn một location, trả về đối tượng có id làm khóa
+      rows.forEach(location => {
+        locationsObj[location.location_id] = location;  // Dùng location_id làm khóa
+      });
+      return locationsObj;
+    } else {
+      return {};  // Nếu không có location nào, trả về đối tượng rỗng
+    }
+  } catch (error) {
+    console.error("Error fetching location order count:", error);
+    throw error;  // Ném lỗi nếu có sự cố
+  }
+}
+
+
+
 module.exports = {
   getAllLocations,
   createLocation,
   getLocationById,
   updateLocation,
   deleteLocation,
+  getLocationOrderCount,
 };

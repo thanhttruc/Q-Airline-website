@@ -3,7 +3,7 @@ const { connectDB } = require('../config/db');
 async function getAllOrders() {
   const connection = await connectDB();
 
-  // Truy vấn tất cả các đơn hàng và kết hợp với các chi tiết đơn hàng
+  // Truy vấn tất cả các đơn hàng và kết hợp với các chi tiết đơn hàng và thông tin người dùng
   const query = `
     SELECT 
       o.id AS order_id,
@@ -21,12 +21,16 @@ async function getAllOrders() {
       f.departure_time,
       f.arrival_time,
       t.name AS ticket_type_name,
-      p.price
+      p.price,
+      u.username,
+      u.full_name,
+      u.email
     FROM orders o
     LEFT JOIN order_details od ON o.id = od.order_id
     LEFT JOIN flights f ON od.flight_id = f.id
     LEFT JOIN ticket_types t ON od.ticket_type_id = t.id
     LEFT JOIN prices p ON od.price_id = p.id
+    LEFT JOIN users u ON o.user_id = u.id  -- Join with users table to get user info
     ORDER BY o.order_date DESC
   `;
 
@@ -42,6 +46,9 @@ async function getAllOrders() {
         order_date: row.order_date,
         order_status: row.order_status,
         voucher_id: row.voucher_id,
+        username: row.username,  // Add username
+        full_name: row.full_name,  // Add full_name
+        email: row.email,  // Add email
         order_details: []
       };
     }

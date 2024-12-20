@@ -19,18 +19,46 @@ async function getAllPromotions() {
   }
 }
 
-//Tạo Promotions
-
 async function createPromotion(promotionData) {
   const connection = await connectDB();
-  const { title, description, start_date, end_date } = promotionData;
+  const { title, description, start_date, end_date, image } = promotionData;
 
-  const result = await connection.query(
-    'INSERT INTO promotions (title, description, start_date, end_date) VALUES (?, ?, ?, ?)',
-    [title, description, start_date, end_date]
-  );
+  try {
+    // Nếu image là Buffer (hình ảnh được tải lên dưới dạng nhị phân), lưu trực tiếp
+    const result = await connection.query(
+      'INSERT INTO promotions (title, description, start_date, end_date, image) VALUES (?, ?, ?, ?, ?)',
+      [title, description, start_date, end_date, image]
+    );
 
-  return result[0]; // Trả về kết quả chèn dữ liệu
+    return result[0];  // Trả về kết quả chèn dữ liệu
+  } catch (error) {
+    throw error;
+  }
 }
 
-module.exports = { getAllPromotions, createPromotion };
+
+async function updatePromotion(promotionId, promotionData) {
+  const connection = await connectDB();
+  const { title, description, start_date, end_date, image, status } = promotionData;
+
+  const result = await connection.query(
+    'UPDATE promotions SET title = ?, description = ?, start_date = ?, end_date = ?, image = ?, status = ? WHERE id = ?',
+    [title, description, start_date, end_date, image, status, promotionId]
+  );
+
+  return result[0]; // Trả về kết quả cập nhật dữ liệu
+}
+
+async function deletePromotion(promotionId) {
+  const connection = await connectDB();
+
+  const result = await connection.query(
+    'DELETE FROM promotions WHERE id = ?',
+    [promotionId]
+  );
+
+  return result[0]; // Trả về kết quả xóa dữ liệu
+}
+
+
+module.exports = { getAllPromotions, createPromotion,  updatePromotion, deletePromotion};
