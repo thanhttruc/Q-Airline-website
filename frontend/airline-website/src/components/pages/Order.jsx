@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import "../../styles/order.css";
 
-
 const Order = () => {
   const { user } = useContext(AuthContext); // Lấy thông tin người dùng đã đăng nhập từ context
   const [orders, setOrders] = useState([]);
@@ -24,7 +23,6 @@ const Order = () => {
 
         if (res.ok) {
           const data = await res.json();
-          // Chuyển đổi dữ liệu từ API (vì API trả về đối tượng có key là order_id)
           const ordersList = Object.values(data); // Lấy tất cả các đơn hàng
           setOrders(ordersList); // Cập nhật danh sách đơn hàng
         } else {
@@ -38,7 +36,30 @@ const Order = () => {
     };
 
     fetchOrders();
-  }, [user]); // Chạy lại khi thông tin người dùng thay đổi
+  }, [user]);
+
+  // Hàm xóa đơn hàng
+  const handleDeleteOrder = async (orderId) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/booking/${orderId}/1`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Cookie': document.cookie, // Giữ cookie session
+        },
+      });
+
+      if (res.ok) {
+        // Xóa đơn hàng khỏi danh sách sau khi xóa thành công
+        // setOrders(orders.filter((order) => order.order_id !== orderId));
+        alert('Đơn hàng đã được xóa thành công!');
+      } else {
+        throw new Error('Không thể xóa đơn hàng');
+      }
+    } catch (error) {
+      alert(`Lỗi: ${error.message}`);
+    }
+  };
 
   if (loading) {
     return <div>Đang tải đơn hàng...</div>;
@@ -71,6 +92,10 @@ const Order = () => {
                 <p><strong>Tổng giá chuyến bay:</strong> {detail.total_price} VND</p>
               </div>
             ))}
+            {/* Thêm nút xóa đơn hàng */}
+            <button onClick={() => handleDeleteOrder(order.order_id)} className="delete-button">
+              Huỷ đơn hàng.
+            </button>
           </div>
         ))
       )}

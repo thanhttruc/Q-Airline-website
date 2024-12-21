@@ -3,9 +3,9 @@
   margin: 20px auto;
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Tăng độ bóng */
-  padding: 30px; /* Tăng padding */
-  font-family: 'Roboto', sans-serif; /* Sử dụng font Roboto */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  padding: 30px;
+  font-family: 'Roboto', sans-serif; 
   color: #333;
 }
 
@@ -20,9 +20,9 @@
 
 .flight-title {
   margin: 0;
-  color: #2c3e50; /* Màu tối hơn cho tiêu đề */
-  font-size: 1.8rem; /* Tăng kích thước tiêu đề */
-  font-weight: 700; /* Đậm tiêu đề */
+  color: #2c3e50; 
+  font-size: 1.8rem; 
+  font-weight: 700;
 }
 
 .flight-header-image {
@@ -30,7 +30,7 @@
   height: 120px;
   object-fit: cover;
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Thêm bóng cho ảnh */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
 }
 
 .flight-info-section {
@@ -53,10 +53,10 @@
 }
 
 .info-label {
-  font-weight: 600; /* Đậm vừa phải */
+  font-weight: 600; 
   width: 150px;
   margin-right: 8px;
-  color: #34495e; /* Màu đậm hơn cho label */
+  color: #34495e; 
 }
 
 .info-value {
@@ -78,8 +78,8 @@
   border-bottom: 1px solid #eee;
   padding-bottom: 12px;
   color: #444;
-  font-size: 1.2rem; /* Tăng kích thước heading */
-  font-weight: 600; /* Đậm heading */
+  font-size: 1.2rem; 
+  font-weight: 600; 
 }
 
 .ticket-list {
@@ -110,28 +110,27 @@
   margin-right: 5px;
 }
 
-/* Style button "Đặt vé" */
 .view__all {
-  display: inline-block; /* Để chỉnh padding */
-  background-color: #3498db; /* Màu nền xanh dương */
-  color: white; /* Màu chữ trắng */
-  padding: 12px 25px; /* Padding lớn hơn cho nút lớn hơn */
+  display: inline-block; 
+  background-color: #3498db; 
+  color: white; 
+  padding: 12px 25px; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
-  text-decoration: none; /* Bỏ gạch chân mặc định */
+  text-decoration: none; 
   font-size: 1rem;
-  font-weight: 500; /* Độ đậm vừa phải cho chữ */
+  font-weight: 500; 
   margin-top: 20px;
-  transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu khi hover */
+  transition: background-color 0.3s ease; 
 }
 
 .view__all:hover {
-  background-color: #2980b9; /* Màu xanh đậm hơn khi hover */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Thêm đổ bóng */
+  background-color: #2980b9; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 }
 
 .view__all:focus {
-  outline: none; /* Loại bỏ outline khi focus */
+  outline: none; 
 }

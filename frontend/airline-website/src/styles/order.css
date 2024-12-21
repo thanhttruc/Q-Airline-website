@@ -1,85 +1,107 @@
 .order-container {
     font-family: "Roboto", sans-serif;
-    padding: 20px;
-    max-width: 90%;
-    margin: 20px auto;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Độ bóng nhẹ */
+    padding: 30px; /* Tăng padding */
+    max-width: 95%; /* Tăng độ rộng */
+    margin: 30px auto; /* Tăng margin trên dưới */
+    background-color: #f5f5f5; /* Màu nền nhạt */
+    border-radius: 12px; /* Bo tròn nhiều hơn */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Tăng độ bóng */
   }
   
   .order-header {
-    color: #34495e; /* Màu tiêu đề đậm */
-    font-size: 2rem; /* Kích thước tiêu đề lớn hơn */
-    font-weight: 700; /* Tiêu đề in đậm */
+    color: #34495e;
+    font-size: 2.3rem; /* Lớn hơn */
+    font-weight: 700;
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 40px; /* Tăng khoảng cách */
   }
   
   .no-orders {
     color: #777;
     text-align: center;
     font-style: italic;
-    margin-top: 20px;
+    margin-top: 25px;
+    font-size: 1.1rem;
   }
   
   .order {
     background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: box-shadow 0.3s ease; /* Hiệu ứng đổ bóng */
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 25px; /* Tăng padding */
+    margin-bottom: 25px; /* Tăng margin */
+    transition: box-shadow 0.3s ease, transform 0.2s ease; /* Thêm transform */
   }
   
   .order:hover {
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Tăng độ bóng */
+    transform: translateY(-3px); /* Hiệu ứng nổi lên */
   }
   
   .order h3 {
-    color: #2c3e50; /* Màu tiêu đề đơn hàng */
-    font-size: 1.5rem;
+    color: #2c3e50;
+    font-size: 1.7rem; /* Lớn hơn */
     font-weight: 600;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee; /* Đường kẻ dày hơn */
+    padding-bottom: 12px; /* Tăng padding */
   }
   
   .order p {
     color: #555;
-    margin-bottom: 8px;
+    margin-bottom: 10px; /* Tăng margin */
+    font-size: 1.05rem; /* Lớn hơn một chút */
   }
   
   .order p strong {
-    color: #34495e; /* Màu in đậm */
+    color: #34495e;
     font-weight: 600;
-    margin-right: 5px;
+    margin-right: 6px; /* Tăng margin */
   }
   
   .order h4 {
     color: #2c3e50;
-    font-size: 1.2rem;
-    margin-top: 15px;
-    margin-bottom: 10px;
+    font-size: 1.3rem; /* Lớn hơn */
+    margin-top: 20px;
+    margin-bottom: 15px;
     border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
+    padding-bottom: 8px; /* Tăng padding */
   }
   
   .flight-detail {
-    background-color: #cfe9f4;
-    border: 1px solid #eee;
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 15px;
+    background-color: #f0f8ff; /* Màu nền nhạt cho chi tiết */
+    border: 1px solid #e0e0e0; /* Viền nhạt */
+    border-radius: 8px;
+    padding: 20px; /* Tăng padding */
+    margin-bottom: 18px; /* Tăng margin */
   }
   
   .flight-detail p {
     color: #555;
-    margin-bottom: 5px;
+    margin-bottom: 8px; /* Tăng margin */
+    font-size: 1rem; /* Lớn hơn */
   }
   
   .flight-detail p strong {
     color: #34495e;
     font-weight: 600;
-    margin-right: 5px;
+    margin-right: 6px; /* Tăng margin */
+  }
+  
+  .delete-button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 15px;
+  }
+  
+  .delete-button:hover {
+      background-color: #c0392b;
+       transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }

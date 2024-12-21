@@ -6,7 +6,6 @@ body {
     padding: 0;
   }
   
-  /* Kích thước và căn giữa container */
   .login__container {
     background-color: #ffffff;
     padding: 40px;
@@ -17,7 +16,6 @@ body {
     margin: 20px auto;
   }
   
-  /* Tiêu đề */
   .login__form h2 {
     text-align: center;
     margin-bottom: 30px;
@@ -25,7 +23,6 @@ body {
     color: #333333;
   }
   
-  /* FormGroup */
   .login__form input {
     width: 100%;
     padding: 10px 15px;
@@ -42,7 +39,6 @@ body {
     box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
   }
   
-  /* Nút đăng nhập */
   .auth__btn {
     width: 100%;
     padding: 10px 20px;
@@ -59,7 +55,6 @@ body {
     background-color: #0056b3;
   }
   
-  /* Liên kết đăng ký tài khoản */
   .login__form p {
     text-align: center;
     margin-top: 15px;
@@ -77,7 +72,6 @@ body {
     text-decoration: underline;
   }
   
-  /* Hiển thị lỗi */
   .error-text {
     color: #ff4d4f;
     font-size: 14px;
@@ -85,7 +79,6 @@ body {
     margin-top: 10px;
   }
   
-  /* Hiệu ứng d-flex nếu cần */
   .d-flex {
     display: flex;
   }

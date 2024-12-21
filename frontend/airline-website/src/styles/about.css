@@ -1,41 +1,93 @@
 .about__background {
-  background-color: #c6e8f6; /* Màu xanh nhạt */
+  background: #cfe9f4;
   padding: 50px 0;
+  font-family: "Roboto", sans-serif;
+  color: #333;
 }
 
-.about__content {
-  padding: 20px;
-  color: #343a40;
+.about__container {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép các cột xuống dòng khi cần thiết */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px; /* Thêm padding để tránh nội dung bị quá sát lề trên màn hình nhỏ*/
+}
+
+.about__image-column {
+  flex: 0 0 40%; /* Chiều rộng cột ảnh */
+    padding: 20px; /* Thêm padding */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about__image-wrapper {
+    width: 300px; /* Đặt kích thước cố định cho hình ảnh */
+    height: 300px; /* Đặt kích thước cố định cho hình ảnh */
+    border-radius: 50%;
+    overflow: hidden; /* Cắt bỏ phần ảnh thừa */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.about__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Đảm bảo ảnh luôn vừa với khung tròn */
+  border-radius: 50%;
+}
+
+.about__content-column {
+    flex: 0 0 60%; /* Chiều rộng cột nội dung */
+     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
 }
 
 .about__content h1 {
-  color: #007bff;
   font-size: 2.5rem;
-  margin-bottom: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  text-align: left;
 }
 
 .about__content p {
   font-size: 1.1rem;
-  line-height: 1.6;
+  color: rgb(85, 85, 85);
+  line-height: 1.7;
+  margin-bottom: 15px;
+  text-align: left;
 }
 
 .about__content .quote {
   font-style: italic;
-  color: #007bff;
-  margin-top: 20px;
+  text-align: right;
+  color: #777;
 }
 
-.about__image-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-.about__image {
-  border-radius: 50%;
-  width: 200px; /* Kích thước vừa phải */
-  height: 200px;
-  object-fit: cover;
-  border: 3px solid #007bff; /* Viền xanh */
+@media (max-width: 768px) {
+    .about__container{
+        flex-direction: column;
+        padding: 0px;
+    }
+    .about__image-column,
+    .about__content-column{
+        flex: 0 0 100%; /* Chiếm toàn bộ chiều ngang */
+    }
+    .about__image-wrapper{
+         width: 250px; /* Giảm kích thước hình ảnh trên màn hình nhỏ */
+        height: 250px; /* Giảm kích thước hình ảnh trên màn hình nhỏ */
+    }
+    .about__content h1,
+    .about__content p{
+        text-align: center;
+    }
+    .about__content .quote{
+        text-align: center;
+    }
 }

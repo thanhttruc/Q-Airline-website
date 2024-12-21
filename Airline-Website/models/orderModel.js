@@ -71,6 +71,36 @@ async function getAllOrders() {
   }
 }
 
+async function updateWhenCancelOrder(orderId) {
+  const connection = await connectDB();
+  try {
+    const [orderDetails] = await connection.query(
+      'SELECT * FROM order_details WHERE order_id = ?',
+      [orderId]
+    );
+    if (orderDetails.length === 0) {
+      throw new Error('Đơn hàng không tồn tại.');
+    }
+    
+    const [flights] = await connection.query(
+      'SELECT * FROM flights WHERE id = ?',
+      [orderDetails[0].flight_id] 
+    );
+
+    if (flights.length === 0) {
+      throw new Error('Chuyến bay không tồn tại.');
+    }
+
+    await connection.query(
+      
+        'UPDATE airplanes SET seat_count = seat_count + ? WHERE id = ?',
+        [orderDetails[0].quantity, flights[0].airplane_id]
+      );
+  } catch (error) {
+    throw new Error('Lỗi khi hủy đơn hàng: ' + error.message);
+  }
+}
+
 async function createOrder(userId, totalPrice, orderDetails, voucherCode) {
   const connection = await connectDB();
   try {
@@ -187,4 +217,4 @@ async function getOrderDetailsByUserId(userId) {
   }
 }
 
-module.exports = { getAllOrders, createOrder, getOrderDetailsByUserId };
+module.exports = { getAllOrders, createOrder, getOrderDetailsByUserId ,updateWhenCancelOrder};

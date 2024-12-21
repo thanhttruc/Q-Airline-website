@@ -27,7 +27,7 @@
 .flight-results {
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive layout */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
 }
 
 .flight-card {
@@ -102,7 +102,7 @@
 }
 .details-button {
   width: fit-content;
-  align-self: flex-end; /* Align button to the bottom right */
+  align-self: flex-end; 
 }
 
 .bold-text {
@@ -112,5 +112,5 @@
   font-style: italic;
   text-align: center;
   color: #888;
-  grid-column: 1 / -1; /* span all columns */
+  grid-column: 1 / -1; 
 }

@@ -584,11 +584,11 @@ nav {
   }
 
 }
-/* Quote styles */
+
 .quote__container {
   text-align: center;
   padding: 3rem 1rem;
-  margin-top: 2rem; /* Added some space above the quote */
+  margin-top: 2rem; 
   background-color: var(--extra-light);
   border-radius: 1rem;
 
@@ -602,8 +602,8 @@ color: var(--text-dark);
   max-width: 700px;
   margin: 0 auto;
   position: relative;
-    padding: 1.5rem; /* add padding for the quote */
-  border: 1px solid var(--primary-color); /* a subtle border */
+    padding: 1.5rem; 
+  border: 1px solid var(--primary-color); 
     border-radius: 1rem;
 }
 
