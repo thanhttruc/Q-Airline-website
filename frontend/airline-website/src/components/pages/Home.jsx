@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from "../../context/AuthContext"; 
+import { AuthContext } from "../../context/AuthContext";
 import "../../styles/home.css"
 import slogan from '../../assets/image/slogan.png'
 import plan1 from '../../assets/image/plan-1.png'
@@ -17,12 +17,32 @@ import travel4 from '../../assets/image/1.jpg'
 
 
 const Home = () => {
-  const { user } = useContext(AuthContext);  
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   if (!user) {
-    navigate("/login");  
+    navigate("/login");
   }
+
+  const inputRefs = useRef([]);
+
+  const handleInputFocus = (index) => {
+    inputRefs.current[index].classList.add('focused');
+  };
+
+  const handleInputBlur = (index) => {
+      if (!inputRefs.current[index].value) {
+          inputRefs.current[index].classList.remove('focused');
+      }
+  };
+
+    useEffect(() => {
+    inputRefs.current.forEach((input) => {
+      if (input.value) {
+          input.classList.add('focused');
+      }
+    });
+  }, []);
 
   return (
     <div>
@@ -34,40 +54,6 @@ const Home = () => {
         href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css"
         rel="stylesheet"
       />
-     {/* Booking Section */}
-     <section className="section__container booking__container">
-                <form>
-          {[
-            { icon: "ri-map-pin-line", label: "Vị trí", placeholder: "Bạn đang ở đâu?", type: "text" },
-            { icon: "ri-map-pin-line", label: "Điểm đến", placeholder: "Thêm điểm đến", type: "text" },
-            { icon: "ri-calendar-line", label: "Xuất phát", placeholder: "Thêm ngày", type: "date" },
-            { icon: "ri-calendar-line", label: "Trở về", placeholder: "Thêm ngày", type: "date" },
-          ].map((field, index) => (
-            <div className="form__group" key={index}>
-              <span>
-                <i className={field.icon}></i>
-              </span>
-              <div className="input__content">
-                <div className="input__group">
-                  <input
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    onInput={(e) => {
-                      
-                    }}
-                  />
-                  <label>{field.label}</label>
-                </div>
-                <p>{field.placeholder}</p>
-              </div>
-            </div>
-          ))}
-          <button className="btn">
-            <i className="ri-search-line"></i>
-          </button>
-        </form>
-
-      </section>
 
       <section className="section__container plan__container">
         <div className="plan__grid">
@@ -109,7 +95,7 @@ const Home = () => {
               <span><i className="ri-calendar-2-line"></i></span>
               <h4>Đặt vé và thư giãn</h4>
               <p>
-                Với "Đặt phòng và thư giãn", bạn có thể ngồi lại, nghỉ ngơi và tận hưởng chuyến đi trong khi chúng tôi 
+                Với "Đặt phòng và thư giãn", bạn có thể ngồi lại, nghỉ ngơi và tận hưởng chuyến đi trong khi chúng tôi
                 lo mọi việc còn lại.
               </p>
             </div>
@@ -117,15 +103,15 @@ const Home = () => {
               <span><i className="ri-shield-check-line"></i></span>
               <h4>Kiểm tra thông minh</h4>
               <p>
-              Khám phá thông minh – giải pháp đột phá nâng tầm trải nghiệm du lịch cùng hãng hàng không của chúng tôi.
+                Khám phá thông minh – giải pháp đột phá nâng tầm trải nghiệm du lịch cùng hãng hàng không của chúng tôi.
               </p>
             </div>
             <div className="memories__card">
               <span><i className="ri-bookmark-2-line"></i></span>
               <h4>Tiết kiệm nhiều hơn</h4>
               <p>
-              Từ giá vé chiết khấu đến các chương trình khuyến mãi và ưu đãi độc quyền,
-              chúng tôi ưu tiên khả năng chi trả mà không ảnh hưởng đến chất lượng.
+                Từ giá vé chiết khấu đến các chương trình khuyến mãi và ưu đãi độc quyền,
+                chúng tôi ưu tiên khả năng chi trả mà không ảnh hưởng đến chất lượng.
               </p>
             </div>
           </div>
@@ -172,7 +158,7 @@ const Home = () => {
       {/* Quote Section */}
       <div className="quote__container">
           <p className="quote">"Vui từng chuyến bay" - Đó là lời hứa QAirline dành cho bạn</p>
-        </div>     
+        </div>
     </div>
   );
 };

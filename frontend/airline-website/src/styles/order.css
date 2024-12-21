@@ -1,0 +1,85 @@
+.order-container {
+    font-family: "Roboto", sans-serif;
+    padding: 20px;
+    max-width: 90%;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Độ bóng nhẹ */
+  }
+  
+  .order-header {
+    color: #34495e; /* Màu tiêu đề đậm */
+    font-size: 2rem; /* Kích thước tiêu đề lớn hơn */
+    font-weight: 700; /* Tiêu đề in đậm */
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  
+  .no-orders {
+    color: #777;
+    text-align: center;
+    font-style: italic;
+    margin-top: 20px;
+  }
+  
+  .order {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease; /* Hiệu ứng đổ bóng */
+  }
+  
+  .order:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  .order h3 {
+    color: #2c3e50; /* Màu tiêu đề đơn hàng */
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+  
+  .order p {
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  .order p strong {
+    color: #34495e; /* Màu in đậm */
+    font-weight: 600;
+    margin-right: 5px;
+  }
+  
+  .order h4 {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+  }
+  
+  .flight-detail {
+    background-color: #cfe9f4;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .flight-detail p {
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .flight-detail p strong {
+    color: #34495e;
+    font-weight: 600;
+    margin-right: 5px;
+  }

@@ -10,14 +10,16 @@ const { createDefaultAdmin } = require('./models/userModel');
 const flightRoutes = require('./routes/flightRoutes');
 const userRoutes = require('./routes/userRoutes');   // Thêm route người dùng
 const adminRoutes = require('./routes/adminRoutes'); 
+const bookingRouter = require('./routes/bookingRoutes');
+
 
 const { connectDB } = require('./config/db');
 const { clearData } = require('./utils/clearData');  // Thêm clearData
 
 // Middleware để parse JSON
 // Cấu hình body-parser để xử lý các yêu cầu có payload lớn hơn
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 
 // Cấu hình thư mục tải ảnh (tùy chỉnh đường dẫn nếu cần)
@@ -96,6 +98,7 @@ app.get('/admin/promotions', (req, res) => {
 app.use('/api', flightRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/admin', adminRoutes);
+app.use('/api/booking', bookingRouter);
 
 
 // Route để kiểm tra quyền truy cập vào admin

@@ -61,10 +61,10 @@ const Header = () => {
                         <div className="navigation" >
                             <nav >
                                 <ul className="nav__links" ref={menuRef}>
-                                    <li className="link"><Link to="/home">Trang chủ</Link></li>
-                                    <li className="link"><Link to="/about">Giới thiệu</Link></li>
-                                    <li className="link"><Link to="/flight">Chuyến bay</Link></li>
-                                    <li className="link"><Link to="/promotion">Khuyến mãi</Link></li>
+                                    <li className="link "><Link to="/home">Trang chủ</Link></li>
+                                    <li className="link "><Link to="/about">Giới thiệu</Link></li>
+                                    <li className="link "><Link to="/flight">Chuyến bay</Link></li>
+                                    <li className="link "><Link to="/promotion">Khuyến mãi</Link></li>
                                     <li className="link"><Link to="/order">Đặt vé</Link></li>
                                 </ul>
                                 

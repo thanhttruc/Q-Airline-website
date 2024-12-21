@@ -9,11 +9,29 @@ import Order from '../pages/Order';
 import About from '../pages/About';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import Booking from '../pages/Booking';
 import FlightDetails from '../pages/FlightDetails';
+import Dashboard from '../Admin/Dashboard'
+import ManageAirports from '../pages/ManageAirports';
+import ManageOrders from '../pages/ManageOrders';
+import ManageAirplanes from '../pages/ManageAirplanes';
+import ManagePromotions from '../pages/ManagePromotions';
 
 const Routers = () => {
   return (
     <Routes>
+      <Route path="/admin/dashboard" element={<Dashboard />}>
+          {/* Các route con sẽ là các đường dẫn tương đối */}
+          <Route path="manage-airports" element={<ManageAirports />} />
+          <Route path="manage-orders" element={<ManageOrders />} />
+          <Route path="manage-airplanes" element={<ManageAirplanes />} />
+          <Route path="manage-promotions" element={<ManagePromotions />} />
+
+
+
+      </Route>
+      
+
       <Route path="/" element={<Navigate to="/home" />} />
 
       <Route path="/home" element={<Home />} />
@@ -24,6 +42,7 @@ const Routers = () => {
       <Route path="/about" element={<About />} />
       <Route path="/register" element={<Register />} />
       <Route path='/flights/:flight_code' element={<FlightDetails />} />
+      <Route path='/booking' element={<Booking />} />
     </Routes>
   );
 };

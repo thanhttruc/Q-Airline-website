@@ -137,6 +137,7 @@ async function getFlightByCode(flight_code) {
         trip_type: row.trip_type,
         airline: row.ticket_airline,
         price: row.price
+        
       }]
     };
   } else {

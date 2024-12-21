@@ -1,64 +1,140 @@
 .promotion-container {
-    padding: 2rem;
-    background-color: #f8f9fa;
-  }
-  
-  .promotion-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2.5rem;
-    color: #333;
-  }
-  
-  .loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
-  }
-  
-  .error-text {
-    color: red;
-    text-align: center;
-    font-size: 1.2rem;
-  }
-  
-  .no-promotion {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #888;
-  }
-  
+  padding: 2rem;
+  background: linear-gradient(135deg, #f5f7fa, #e4e8ed);
+  font-family: "Roboto", sans-serif;
+  color: #333;
+}
+
+.promotion-header-wrapper {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.promotion-header {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.75rem;
+}
+
+.header-underline {
+  width: 100px;
+  height: 3px;
+  background: #3498db;
+  margin: 0.5rem auto;
+  border-radius: 2px;
+}
+
+.loading-spinner,
+.error-text,
+.no-promotion {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  color: #777;
+}
+
+.error-text {
+  color: #e74c3c;
+}
+
+.no-promotion {
+  color: #95a5a6;
+}
+
+.promotion-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;  /* Căn các card sang trái */
+  margin: 0 -10px;
+}
+
+.promotion-card {
+  padding: 10px;
+  width: calc(33.333% - 20px);
+  max-width: calc(33.333% - 20px);
+  aspect-ratio: 1 / 1.1; /* Điều chỉnh chiều cao thấp hơn bằng cách giảm tỉ lệ này */
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+
+}
+
+@media (max-width: 992px) {
   .promotion-card {
-    margin-bottom: 1.5rem;
+      width: calc(50% - 20px);
+      max-width: calc(50% - 20px);
   }
-  
-  .promotion-card-item {
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .promotion-card {
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px);
   }
-  
-  .promotion-card-item:hover {
-    transform: translateY(-10px);
-  }
-  
-  .card-img-top {
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
-  }
-  
-  .promotion-button {
-    width: 100%;
-    margin-top: 1rem;
-    border-radius: 5px;
-    font-weight: bold;
-  }
-  
-  @media (max-width: 768px) {
-    .promotion-header {
-      font-size: 2rem;
-    }
-  }
-  
+}
+
+
+.promotion-card-item {
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+   height: 100%;
+}
+
+.promotion-card-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-image-container {
+  height: 50%;  /* Điều chỉnh chiều cao ảnh để phù hợp với thẻ thấp hơn */
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.promotion-card-item:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.card-body-content {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.promotion-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 0.6rem;
+}
+
+.promotion-card-description {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+}
+
+.promotion-card-time,
+.promotion-card-status {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.4rem;
+}

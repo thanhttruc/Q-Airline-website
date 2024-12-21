@@ -122,7 +122,9 @@ router.get('/session', (req, res) => {
 
 router.get('/order-details/:user_id', async (req, res) => {
   const userId = parseInt(req.params.user_id);
-
+  if (isNaN(userId)) {
+    return res.status(400).json({ message: 'ID người dùng không hợp lệ.' });
+  }
   try {
     const orderDetails = await getOrderDetailsByUserId(userId);
 

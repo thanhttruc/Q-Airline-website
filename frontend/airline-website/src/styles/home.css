@@ -169,6 +169,10 @@ nav {
   pointer-events: none;
   transition: 0.3s;
 }
+.booking__container input.focused ~ label {
+    font-size: 0.8rem;
+    top: 0;
+}
 
 .booking__container input {
   width: 100%;
@@ -178,11 +182,6 @@ nav {
   border: none;
   border-bottom: 1px solid var(--primary-color);
   color: var(--text-dark);
-}
-
-.booking__container input:focus ~ label {
-  font-size: 0.8rem;
-  top: 0;
 }
 
 .booking__container .form__group p {

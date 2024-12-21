@@ -6,9 +6,15 @@ import travel1 from '../../assets/image/4.jpg'
 import travel2 from '../../assets/image/2.jpg'
 import travel3 from '../../assets/image/3.jpg'
 import travel4 from '../../assets/image/1.jpg'
+import travel5 from '../../assets/image/5.jpg'
+import travel6 from '../../assets/image/6.jpg'
+import travel7 from '../../assets/image/7.jpg'
+import travel8 from '../../assets/image/8.jpg'
+import travel9 from '../../assets/image/9.jpg'
+import travel10 from '../../assets/image/10.jpg'
 
 const Flight = () => {
-  const images = [travel1, travel2, travel3, travel4];
+  const images = [travel1, travel2, travel3, travel4, travel5, travel6, travel7, travel8, travel9, travel10];
 
 
   const [searchValue, setSearchValue] = useState('');
@@ -81,10 +87,10 @@ const Flight = () => {
                 <div className="flight-details">
                   <div className="ticket-info">
                     <p><span className="bold-text">Loại vé: </span>{flight.tickets.type}</p>
-                    <p><span className="bold-text">Giá: </span>${flight.tickets.price}</p>
+                    <p><span className="bold-text">Giá: </span>{flight.tickets.price}VND</p>
                   </div>
                   <p><span className="bold-text">Trạng thái: </span>{flight.status}</p>
-                  <p><span className="bold-text">Số ghế: </span>{flight.airplane.seat_count}</p>
+                  <p><span className="bold-text">Số ghế còn lại: </span>{flight.airplane.seat_count}</p>
                 </div>
   
                 <Link to={`/flights/${flight.flight_code}`}>

@@ -1,0 +1,21 @@
+/* src/styles/Dashboard.css */
+.dashboard {
+    display: flex;           /* Dùng flex để sắp xếp các phần tử ngang */
+    height: 100vh;           /* Chiếm toàn bộ chiều cao của màn hình */
+  }
+  
+  .sidebar {
+    width: 250px;            /* Sidebar có chiều rộng cố định */
+    height: 100%;            /* Chiều cao sidebar chiếm toàn bộ chiều cao của màn hình */
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+  
+  .content {
+    flex-grow: 1;            /* Content chiếm phần còn lại của không gian */
+    padding: 20px;           /* Padding để tạo khoảng cách giữa content và viền */
+    background-color: #fff;
+    overflow-y: auto;        /* Cho phép cuộn khi nội dung dài */
+    margin-left: 0px;      /* Dùng margin-left để đẩy content ra khỏi sidebar */
+  }
+  

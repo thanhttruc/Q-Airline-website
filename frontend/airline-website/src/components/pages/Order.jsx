@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../context/AuthContext'
+import { AuthContext } from '../../context/AuthContext';
+import "../../styles/order.css";
+
+
 const Order = () => {
   const { user } = useContext(AuthContext); // Lấy thông tin người dùng đã đăng nhập từ context
   const [orders, setOrders] = useState([]);
@@ -14,14 +17,16 @@ const Order = () => {
     // Hàm lấy chi tiết đơn hàng
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/users/order-details/${user.id}`, {
+        const res = await fetch(`http://localhost:3000/api/booking/user/${user.id}`, {
           method: 'GET',
           credentials: 'include', // Gửi cookie session nếu có
         });
 
         if (res.ok) {
           const data = await res.json();
-          setOrders(data); // Cập nhật danh sách đơn hàng
+          // Chuyển đổi dữ liệu từ API (vì API trả về đối tượng có key là order_id)
+          const ordersList = Object.values(data); // Lấy tất cả các đơn hàng
+          setOrders(ordersList); // Cập nhật danh sách đơn hàng
         } else {
           throw new Error('Không thể lấy thông tin đơn hàng');
         }
@@ -57,17 +62,13 @@ const Order = () => {
             <h4>Chi tiết chuyến bay</h4>
             {order.flight_details.map((detail, index) => (
               <div key={index} className="flight-detail">
-                <p><strong>Chuyến bay:</strong> {detail.flight.flight_code}</p>
-                <p><strong>Điểm xuất phát:</strong> {detail.flight.departure_location}</p>
-                <p><strong>Điểm đến:</strong> {detail.flight.arrival_location}</p>
-                <p><strong>Thời gian cất cánh:</strong> {detail.flight.departure_time}</p>
-                <p><strong>Thời gian hạ cánh:</strong> {detail.flight.arrival_time}</p>
-                <p><strong>Hãng hàng không:</strong> {detail.flight.airline}</p>
-                <p><strong>Loại vé:</strong> {detail.ticket.type}</p>
-                <p><strong>Mô tả vé:</strong> {detail.ticket.description}</p>
-                <p><strong>Giá vé:</strong> {detail.ticket.price} VND</p>
-                <p><strong>Số lượng:</strong> {detail.ticket.quantity}</p>
-                <p><strong>Tổng giá:</strong> {detail.ticket.total_price} VND</p>
+                <p><strong>Chuyến bay:</strong> {detail.flight_code}</p>
+                <p><strong>Thời gian cất cánh:</strong> {new Date(detail.departure_time).toLocaleString()}</p>
+                <p><strong>Thời gian hạ cánh:</strong> {new Date(detail.arrival_time).toLocaleString()}</p>
+                <p><strong>Loại vé:</strong> {detail.ticket_type_name}</p>
+                <p><strong>Số lượng:</strong> {detail.quantity}</p>
+                <p><strong>Giá vé:</strong> {detail.price} VND</p>
+                <p><strong>Tổng giá chuyến bay:</strong> {detail.total_price} VND</p>
               </div>
             ))}
           </div>
