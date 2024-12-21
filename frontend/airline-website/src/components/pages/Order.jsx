@@ -8,33 +8,33 @@ const Order = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const fetchOrders = async () => {
     if (!user) {
       return; // Nếu chưa đăng nhập, không thực hiện API
     }
 
-    // Hàm lấy chi tiết đơn hàng
-    const fetchOrders = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/api/booking/user/${user.id}`, {
-          method: 'GET',
-          credentials: 'include', // Gửi cookie session nếu có
-        });
+    setLoading(true);
+    try {
+      const res = await fetch(`http://localhost:3000/api/booking/user/${user.id}`, {
+        method: 'GET',
+        credentials: 'include', // Gửi cookie session nếu có
+      });
 
-        if (res.ok) {
-          const data = await res.json();
-          const ordersList = Object.values(data); // Lấy tất cả các đơn hàng
-          setOrders(ordersList); // Cập nhật danh sách đơn hàng
-        } else {
-          throw new Error('Không thể lấy thông tin đơn hàng');
-        }
-      } catch (error) {
-        setError(error.message); // Xử lý lỗi nếu có
-      } finally {
-        setLoading(false); // Đánh dấu hoàn tất việc lấy dữ liệu
+      if (res.ok) {
+        const data = await res.json();
+        const ordersList = Object.values(data); // Lấy tất cả các đơn hàng
+        setOrders(ordersList); // Cập nhật danh sách đơn hàng
+      } else {
+        throw new Error('Không thể lấy thông tin đơn hàng');
       }
-    };
+    } catch (error) {
+      setError(error.message); // Xử lý lỗi nếu có
+    } finally {
+      setLoading(false); // Đánh dấu hoàn tất việc lấy dữ liệu
+    }
+  };
 
+  useEffect(() => {
     fetchOrders();
   }, [user]);
 
@@ -44,15 +44,11 @@ const Order = () => {
       const res = await fetch(`http://localhost:3000/api/booking/${orderId}/1`, {
         method: 'DELETE',
         credentials: 'include',
-        headers: {
-          'Cookie': document.cookie, // Giữ cookie session
-        },
       });
 
       if (res.ok) {
-        // Xóa đơn hàng khỏi danh sách sau khi xóa thành công
-        // setOrders(orders.filter((order) => order.order_id !== orderId));
         alert('Đơn hàng đã được xóa thành công!');
+        await fetchOrders(); // Gọi lại hàm fetchOrders để cập nhật danh sách đơn hàng
       } else {
         throw new Error('Không thể xóa đơn hàng');
       }
@@ -94,7 +90,7 @@ const Order = () => {
             ))}
             {/* Thêm nút xóa đơn hàng */}
             <button onClick={() => handleDeleteOrder(order.order_id)} className="delete-button">
-              Huỷ đơn hàng.
+              Huỷ đơn hàng
             </button>
           </div>
         ))

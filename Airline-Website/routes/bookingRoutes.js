@@ -67,9 +67,13 @@ router.delete('/:user_id/:order_id', async (req, res) => {
     }
 
     // Kiểm tra trạng thái đơn hàng, chỉ hủy nếu chưa được xử lý
-    // if (order[0].status === 'Pending') {
-    //   return res.status(400).json({ message: 'Không thể hủy đơn hàng đã được xử lý hoặc giao hàng.' });
-    // }
+
+      if (order[0].status === 'Canceled') {
+        return res.status(400).json({ message: 'Đơn hàng đã bị huỷ.' });
+      }
+      if (order[0].status === 'Complete')
+      return res.status(400).json({ message: 'Đơn hàng đã thanh toán.' });
+  
   
     // Tiến hành hủy đơn hàng
     await connection.query('UPDATE orders SET status = ? WHERE id = ?', ['Canceled', orderId]);
