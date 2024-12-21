@@ -63,7 +63,7 @@ const cors = require('cors');
 app.use(cors({
   origin: 'http://localhost:3002',  
   credentials: true, 
-  methods: ['GET', 'POST', 'OPTIONS', 'DELETE'],  
+  methods: ['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],   
 }));
 
 // Xử lý preflight request (OPTIONS)

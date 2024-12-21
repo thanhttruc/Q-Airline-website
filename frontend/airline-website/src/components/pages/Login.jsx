@@ -103,7 +103,7 @@ const Login = () => {
                     Đăng nhập
                   </Button>
                 </Form>
-                {error && <p className="error-text">{error}</p>} {/* Hiển thị lỗi nếu có */}
+                {error && <p className="error-text">{error}</p>} 
                 <p>Chưa có tài khoản? <Link to='/register'>Tạo tài khoản mới</Link></p>
               </div>
             </div>

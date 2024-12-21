@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+// const { generatePromotionPage } = require('../utils/promotionUtils');
 
 
-const { createPromotion } = require('../models/promotionModel'); 
+const { getVoucherByCode, updateVoucherStatus, getAllVouchers, addVoucher, deleteVoucher } = require('../models/voucherModel');
+
+
+const { createPromotion, getPromotionByUrl } = require('../models/promotionModel'); 
 const locationModel = require('../models/locationModel'); 
 const airplaneModel = require('../models/airplaneModel');
 const { createPrice, updatePrice, updatePriceByFlightAndTicketType} = require('../models/priceModel');
@@ -13,7 +17,28 @@ const orderModel = require('../models/orderModel');  // Import model
 const storage = multer.memoryStorage();  // Lưu ảnh trong bộ nhớ dưới dạng Buffer
 const upload = multer({ storage: storage });
 
+router.post('/admin/create-html', (req, res) => {
+  const { descriptionHTML } = req.body;
 
+  if (!descriptionHTML) {
+    return res.status(400).json({ message: 'Nội dung mô tả không hợp lệ' });
+  }
+
+  try {
+    const timestamp = Date.now();
+    const fileName = `promotion_${timestamp}.html`;
+    const filePath = path.join(__dirname, 'uploads', fileName);
+
+    fs.writeFileSync(filePath, descriptionHTML);
+
+    const pageUrl = `/uploads/${fileName}`;
+    res.json({ pageUrl });
+
+  } catch (error) {
+    console.error('Error creating HTML file:', error);
+    res.status(500).json({ message: 'Không thể tạo trang mô tả' });
+  }
+});
 
 
 //Prices
@@ -98,7 +123,12 @@ router.put('/airplanes/:id', async (req, res) => {
 
 // API để xóa máy bay
 router.delete('/airplanes/:id', async (req, res) => {
-  const { id } = req.params;
+
+  let { id } = req.params;  // Lấy ID từ tham số URL
+  // Nếu không có ID trong URL, kiểm tra trong request body
+  if (!id && req.body && req.body.id) {
+    id = req.body.id;
+  }
   try {
     const result = await airplaneModel.deleteAirplane(id); // Xóa máy bay theo ID
     if (result.affectedRows > 0) {
@@ -108,7 +138,6 @@ router.delete('/airplanes/:id', async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Lỗi khi xóa máy bay.' });
   }
 });
 
@@ -170,30 +199,28 @@ router.delete('/locations/:id', async (req, res) => {
 
 // Route xử lý đăng bài khuyến mại
 // Route xử lý đăng bài khuyến mãi
-// Route xử lý đăng bài khuyến mãi
-router.post('/promotions', upload.single('image'), async (req, res) => {
-  const { title, description, start_date, end_date } = req.body;
-  const image = req.file ? req.file.buffer : null;  // Lấy buffer ảnh từ yêu cầu tải lên
+router.post('/promotions', async (req, res) => {
+  const { title, description, start_date, end_date, image } = req.body; // Lấy dữ liệu từ yêu cầu
 
   console.log('Data received in POST request:', req.body);
 
   // Kiểm tra dữ liệu đầu vào
-  if (!title || !description || !start_date || !end_date) {
+  if (!title || !description || !start_date || !end_date || !image) {
     return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
   }
 
   try {
-    // Tạo HTML cho mô tả với liên kết (nếu có ID khuyến mãi)
+    // Tạo ID cho khuyến mãi
     const promotionId = Date.now();  // Tạo id tạm thời cho khuyến mãi
-    const descriptionHTML = `<a href="http://localhost:3002/promotion/${promotionId}">${description}</a>`;  // Tạo liên kết cho mô tả
+    const descriptionURL = `http://localhost:3002/admin/promotion/${promotionId}`;  // Tạo link mô tả
 
-    // Gọi hàm tạo khuyến mãi với mô tả đã chuyển thành HTML
+    // Gửi dữ liệu khuyến mãi vào cơ sở dữ liệu
     const promotion = await createPromotion({
       title,
-      description: descriptionHTML,  // Gửi mô tả dưới dạng HTML
+      description: descriptionURL,  // Mô tả dưới dạng URL
       start_date,
       end_date,
-      image // Dữ liệu ảnh sẽ là Buffer nếu người dùng tải ảnh lên
+      image // Lưu URL ảnh
     });
 
     // Trả về thông tin khuyến mãi vừa được tạo
@@ -202,10 +229,10 @@ router.post('/promotions', upload.single('image'), async (req, res) => {
       promotion: {
         id: promotion.id,
         title: promotion.title,
-        description: promotion.description,  // Mô tả sẽ là HTML với liên kết
+        description: descriptionURL,  // Mô tả là URL
         start_date: promotion.start_date,
         end_date: promotion.end_date,
-        image: promotion.image ? 'data:image/jpeg;base64,' + promotion.image.toString('base64') : null // Nếu có ảnh thì chuyển thành Base64
+        image: promotion.image // Đây là URL hình ảnh đã được gửi
       }
     });
   } catch (error) {
@@ -213,6 +240,7 @@ router.post('/promotions', upload.single('image'), async (req, res) => {
     res.status(500).json({ message: 'Lỗi khi đăng khuyến mãi', error: error.message });
   }
 });
+
 // Route xử lý cập nhật bài khuyến mại
 router.put('/promotions/:id', async (req, res) => {
   const promotionId = req.params.id;
@@ -253,6 +281,97 @@ router.delete('/promotions/:id', async (req, res) => {
     res.status(500).json({ message: 'Lỗi khi xóa khuyến mãi', error: error.message });
   }
 });
+
+// Route to serve dynamic promotion page by description (URL)
+router.get('/promotion/:description', async (req, res) => {
+  const { description } = req.params; // Description is the URL we stored in the database
+
+  try {
+    const promotion = await getPromotionByUrl(description); // Fetch promotion from DB by description
+    if (promotion) {
+      const { title, start_date, end_date, image, id } = promotion;
+
+      // Check if the HTML file exists (optional: this depends on how you store the HTML)
+      const promotionFilePath = path.join(__dirname, '..', 'promotion_pages', `${id}.html`);
+      
+      if (fs.existsSync(promotionFilePath)) {
+        // If the HTML file exists, serve it
+        const htmlContent = fs.readFileSync(promotionFilePath, 'utf8');  // Read the HTML file
+        res.send(htmlContent);
+      } else {
+        // If the file doesn't exist, generate the HTML dynamically and serve it
+        const htmlContent = generatePromotionPage(title, start_date, end_date, image);
+        res.send(htmlContent);
+      }
+    } else {
+      res.status(404).send('<h1>Promotion not found</h1>');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('<h1>Internal Server Error</h1>');
+  }
+});
+// Lấy tất cả vouchers
+
+// Cập nhật trạng thái voucher
+router.put('/vouchers/:id/status', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  
+  const result = await updateVoucherStatus(id, status);
+  if (result.success) {
+    res.status(200).json({ message: 'Voucher status updated successfully' });
+  } else {
+    res.status(404).json({ message: result.message || 'Voucher not found' });
+  }
+});
+
+// Lấy tất cả vouchers
+router.get('/vouchers', async (req, res) => {
+  try {
+    const vouchers = await getAllVouchers();
+    res.status(200).json(vouchers);
+  } catch (error) {
+    res.status(500).json({ message: 'Error getting all vouchers' });
+  }
+});
+
+// Thêm voucher mới
+// Thêm voucher mới
+router.post('/vouchers', async (req, res) => {
+  const { code, discount, expiration_date } = req.body;
+
+  if (!code || !discount || !expiration_date) {
+    return res.status(400).json({ message: 'Missing required fields.' });
+  }
+
+  try {
+    const newVoucher = await addVoucher({ code, discount, expiration_date });
+    res.status(201).json(newVoucher); // Trả về toàn bộ voucher vừa thêm vào
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error adding voucher.' });
+  }
+});
+
+
+// Xóa voucher
+router.delete('/vouchers/:id', async (req, res) => {
+  const { id } = req.params;
+  console.log(`Received DELETE request for voucher ID: ${id}`);
+
+  try {
+    const result = await deleteVoucher(id); // Gọi hàm xóa trong model
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Voucher not found' });
+    }
+    res.status(200).json({ message: 'Voucher deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting voucher:', error);
+    res.status(500).json({ message: 'Failed to delete voucher' });
+  }
+});
+
 
 
 //Route admin orders

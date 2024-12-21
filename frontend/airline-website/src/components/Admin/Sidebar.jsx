@@ -198,6 +198,13 @@ function Sidebar() {
           <ListItem button component={Link} to="manage-orders" >
           <ListItemText primary="Quản lý đơn hàng" />
         </ListItem>
+    
+
+       {/* Các menu khác */}
+          {/*Đơn hàng*/}
+          <ListItem button component={Link} to="manage-ticket-prices" >
+          <ListItemText primary="Quản lý vé đặt" />
+        </ListItem>
       </List>
 
       {/* Quan li khuyen mai */}
@@ -209,14 +216,15 @@ function Sidebar() {
             <ListItem button component={Link} to="manage-promotions"className="sidebar-submenu">
               <ListItemText primary="Trang quản lý khuyến mãi" />
             </ListItem>
-            <ListItem button className="sidebar-submenu">
+            <ListItem button component={Link} to="manage-vouchers"className="sidebar-submenu">
               <ListItemText primary="Kích hoạt Vouchers" />
             </ListItem>
-            <ListItem button className="sidebar-submenu">
+            <ListItem button component={Link} to="manage-create-promotions"className="sidebar-submenu">
               <ListItemText primary="Đăng bài khuyến mại" />
             </ListItem>
           </List>
         </Collapse>
+  
 
       {/* Modal để thêm địa điểm */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>

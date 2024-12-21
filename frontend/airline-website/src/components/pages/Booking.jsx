@@ -100,7 +100,7 @@ const Booking = () => {
 
 
   if (!flight) {
-    return <p>Loading flight details...</p>;
+    return <p>Đang tải thông tin chuyến bay...</p>;
   }
 
   const { departure, arrival, flight_code, airline } = flight;
@@ -109,7 +109,7 @@ const Booking = () => {
 
   return (
     <div className="booking-container">
-      <h2>Book a ticket for flight: {flight_code}</h2>
+      <h2>Vé của bạn : {flight_code}</h2>
       <div className="flight-summary">
         <p><strong>Hãng hàng không:</strong> {airline}</p>
         <p><strong>Khởi hành:</strong> {departureLocation} at {departureTime}</p>

@@ -21,7 +21,6 @@ const FlightDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Sửa lại URL fetch với backticks
     fetch(`http://localhost:3000/api/flights/${flight_code}`)
       .then((response) => response.json())
       .then((data) => {
@@ -35,7 +34,7 @@ const FlightDetails = () => {
     return <p>Loading...</p>;
   }
 
-  // Lấy giá vé từ vé đầu tiên, kiểm tra sự tồn tại
+  // Lấy giá vé từ vé đầu tiên
   const ticketPrice = flight.tickets && flight.tickets[0]?.price;
 
   return (

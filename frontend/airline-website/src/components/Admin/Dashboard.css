@@ -1,21 +1,19 @@
-/* src/styles/Dashboard.css */
 .dashboard {
-    display: flex;           /* Dùng flex để sắp xếp các phần tử ngang */
-    height: 100vh;           /* Chiếm toàn bộ chiều cao của màn hình */
-  }
-  
-  .sidebar {
-    width: 250px;            /* Sidebar có chiều rộng cố định */
-    height: 100%;            /* Chiều cao sidebar chiếm toàn bộ chiều cao của màn hình */
-    background-color: #f4f4f4;
-    padding: 20px;
-  }
-  
-  .content {
-    flex-grow: 1;            /* Content chiếm phần còn lại của không gian */
-    padding: 20px;           /* Padding để tạo khoảng cách giữa content và viền */
-    background-color: #fff;
-    overflow-y: auto;        /* Cho phép cuộn khi nội dung dài */
-    margin-left: 0px;      /* Dùng margin-left để đẩy content ra khỏi sidebar */
-  }
-  
+  display: flex;           /* DÃ¹ng flex Ä‘á»ƒ sáº¯p xáº¿p cÃ¡c pháº§n tá»­ ngang */
+  height: 100vh;           /* Chiáº¿m toÃ n bá»™ chiá»u cao cá»§a mÃ n hÃ¬nh */
+}
+
+.sidebar {
+  width: 250px;            /* Sidebar cÃ³ chiá»u rá»™ng cá»‘ Ä‘á»‹nh */
+  height: 100%;            /* Chiá»u cao sidebar chiáº¿m toÃ n bá»™ chiá»u cao cá»§a mÃ n hÃ¬nh */
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.content {
+  flex-grow: 1;            /* Content chiáº¿m pháº§n cÃ²n láº¡i cá»§a khÃ´ng gian */
+  padding: 20px;           /* Padding Ä‘á»ƒ táº¡o khoáº£ng cÃ¡ch giá»¯a content vÃ  viá»n */
+  background-color: #fff;
+  overflow-y: auto;        /* Cho phÃ©p cuá»™n khi ná»™i dung dÃ i */
+  margin-left: 0px;      /* DÃ¹ng margin-left Ä‘á»ƒ Ä‘áº©y content ra khá»i sidebar */
+}

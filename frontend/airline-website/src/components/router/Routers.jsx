@@ -16,6 +16,9 @@ import ManageAirports from '../pages/ManageAirports';
 import ManageOrders from '../pages/ManageOrders';
 import ManageAirplanes from '../pages/ManageAirplanes';
 import ManagePromotions from '../pages/ManagePromotions';
+import ManageCreatePromotions from '../pages/ManageCreatePromotions';
+import ManageVouchers from '../pages/ManageVouchers';
+import ManageTicketPrices from '../pages/ManageTicketPrices';
 
 const Routers = () => {
   return (
@@ -26,8 +29,9 @@ const Routers = () => {
           <Route path="manage-orders" element={<ManageOrders />} />
           <Route path="manage-airplanes" element={<ManageAirplanes />} />
           <Route path="manage-promotions" element={<ManagePromotions />} />
-
-
+          <Route path="manage-create-promotions" element={<ManageCreatePromotions />} />
+          <Route path="manage-vouchers" element={<ManageVouchers />} />
+          <Route path="manage-ticket-prices" element={<ManageTicketPrices />} />
 
       </Route>
       

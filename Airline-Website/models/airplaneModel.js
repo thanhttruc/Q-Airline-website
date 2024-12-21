@@ -64,16 +64,35 @@ async function updateAirplane(id, airplaneData) {
 
 // Hàm xóa máy bay theo ID
 async function deleteAirplane(id) {
-    const connection = await connectDB();
-  
+  const connection = await connectDB();
+
+  try {
+    // Tắt kiểm tra khóa ngoại để bỏ qua ràng buộc khóa ngoại
+    await connection.query('SET FOREIGN_KEY_CHECKS = 0');
+
+    // Xóa các chuyến bay có liên quan đến máy bay (hoặc set NULL nếu bạn muốn)
+    await connection.query('DELETE FROM flights WHERE airplane_id = ?', [id]);
+
+    // Xóa máy bay
     const result = await connection.query('DELETE FROM airplanes WHERE id = ?', [id]);
-  
+
     if (result.affectedRows === 1) {
+      // Re-enable foreign key checks
+      await connection.query('SET FOREIGN_KEY_CHECKS = 1');
       return { message: 'Xóa máy bay thành công' };
     } else {
+      // Re-enable foreign key checks
+      await connection.query('SET FOREIGN_KEY_CHECKS = 1');
       return { message: 'Không tìm thấy máy bay để xóa' };
     }
+  } catch (error) {
+    console.error('Lỗi khi xóa máy bay:', error);
+    // Ensure foreign key checks are re-enabled even in case of an error
+    await connection.query('SET FOREIGN_KEY_CHECKS = 1');
+    return { message: 'Có lỗi xảy ra khi xóa máy bay' };
   }
+}
+
   
   module.exports = {
     getAllAirplanes,

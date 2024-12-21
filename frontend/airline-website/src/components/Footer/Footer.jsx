@@ -15,7 +15,7 @@ function Footer() {
           <h3>QAirline</h3>
           <p>
             Nơi sự xuất sắc bay cao. Với cam kết mạnh mẽ về sự hài lòng của khách
-            hàng và niềm đam mê du lịch hàng không, QAirlines cung cấp dịch vụ
+            hàng và niềm đam mê du lịch hàng không, QAirline cung cấp dịch vụ
             đặc biệt và hành trình liền mạch. Từ những nụ cười thân thiện đến máy
             bay hiện đại, chúng tôi kết nối thế giới, đảm bảo những trải nghiệm
             an toàn, thoải mái và khó quên.

@@ -18,7 +18,7 @@ function ManageAirplanes() {
       const response = await fetch('/api/airplanes');  // Thay đổi endpoint nếu cần
       const data = await response.json();
 
-      // Chuyển đổi đối tượng máy bay thành mảng để dễ dàng render bảng
+      // Chuyển đối tượng máy bay thành mảng để dễ dàng render bảng
       const airplanesArray = Object.values(data);
       setAirplanes(airplanesArray);
     } catch (error) {

@@ -1,4 +1,7 @@
 const { connectDB } = require('../config/db');
+const fs = require('fs');
+const path = require('path');
+// const { generatePromotionPage } = require('../utils/promotionUtils');
 
 //Lấy tất cả promotions để hiển thị
 
@@ -20,22 +23,23 @@ async function getAllPromotions() {
 }
 
 async function createPromotion(promotionData) {
-  const connection = await connectDB();
-  const { title, description, start_date, end_date, image } = promotionData;
+  const connection = await connectDB();  // Kết nối đến cơ sở dữ liệu
+  const { title, description, start_date, end_date, image } = promotionData;  // Lấy dữ liệu từ promotionData
 
   try {
-    // Nếu image là Buffer (hình ảnh được tải lên dưới dạng nhị phân), lưu trực tiếp
+    // Thực thi câu lệnh SQL để chèn dữ liệu vào bảng promotions
     const result = await connection.query(
       'INSERT INTO promotions (title, description, start_date, end_date, image) VALUES (?, ?, ?, ?, ?)',
-      [title, description, start_date, end_date, image]
+      [title, description, start_date, end_date, image]  // Truyền các giá trị vào câu lệnh SQL
     );
 
     return result[0];  // Trả về kết quả chèn dữ liệu
   } catch (error) {
+    // Nếu có lỗi xảy ra, ném lỗi để xử lý ngoài hàm
     throw error;
+ 
   }
 }
-
 
 async function updatePromotion(promotionId, promotionData) {
   const connection = await connectDB();
@@ -60,5 +64,16 @@ async function deletePromotion(promotionId) {
   return result[0]; // Trả về kết quả xóa dữ liệu
 }
 
+// Lấy chi tiết promotion dựa trên URL mô tả
+async function getPromotionByUrl(descriptionUrl) {
+  const connection = await connectDB();
+  const [rows] = await connection.query('SELECT * FROM promotions WHERE description = ?', [descriptionUrl]);
 
-module.exports = { getAllPromotions, createPromotion,  updatePromotion, deletePromotion};
+  if (rows.length > 0) {
+    return rows[0];
+  }
+  return null; // Nếu không tìm thấy promotion theo URL
+}
+
+
+module.exports = { getAllPromotions, createPromotion,  updatePromotion, deletePromotion, getPromotionByUrl};

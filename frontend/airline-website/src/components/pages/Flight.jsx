@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';  // Import Link từ react-router-dom
+import { Link } from 'react-router-dom';  
 import "../../styles/flight.css";
 import travel1 from '../../assets/image/4.jpg'
 import travel2 from '../../assets/image/2.jpg'
@@ -61,7 +61,7 @@ const Flight = () => {
       <div className="flight-results">
         {filteredFlights && filteredFlights.length > 0 ? (
           filteredFlights.map((flight, index) => {
-            const randomIndex = Math.floor(Math.random() * images.length); // Lấy chỉ số ngẫu nhiên
+            const randomIndex = Math.floor(Math.random() * images.length); 
             return (
               <div key={index} className="flight-card">
                 <div className="flight-card-header">
@@ -71,7 +71,7 @@ const Flight = () => {
                 <div className="flight-info">
                   <div className="departure-info">
                     <img
-                      src={images[randomIndex]} // Sử dụng ảnh ngẫu nhiên
+                      src={images[randomIndex]} 
                       alt={flight.departure.location}
                       className="departure-image"
                     />
