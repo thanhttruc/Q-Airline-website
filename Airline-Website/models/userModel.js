@@ -88,4 +88,3 @@ async function createUser(userData) {
   
   module.exports = { getAllUsers, createUser, createDefaultAdmin, getOneUserByName, getOneUserById };
 
-

@@ -1,78 +1,92 @@
 import React, { useState, useEffect } from 'react';
+import {useContext } from 'react';
+
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer, Label } from 'recharts';
 import styled from 'styled-components';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, CircularProgress } from '@mui/material';
 import axios from 'axios';
+import { AuthContext } from '../../context/AuthContext';
 
-// Styled component cho container biểu đồ và bảng
+
 const DashboardContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  gap: 20px; /* Khoảng cách giữa biểu đồ và bảng */
+  gap: 20px;
   padding: 20px;
 `;
 
 const ChartContainer = styled.div`
-  width: 60%; /* Chiều rộng của biểu đồ */
+  width: 60%;
   height: 600px;
 `;
 
 const TableContainer = styled.div`
-  width: 35%; /* Chiều rộng của bảng */
-  overflow-x: auto; /* Đảm bảo bảng có thể cuộn ngang nếu quá rộng */
+  width: 35%;
+  overflow-x: auto;
 `;
 
 const ManageAirports = () => {
+
+  const [loading, setLoading] = useState(true);
+  const [userDetails, setUserDetails] = useState(null);
+  const [error, setError] = useState(null);
   const [chartData, setChartData] = useState([]);
   const [locations, setLocations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { user } = useContext(AuthContext);
+  
 
-  // Thông tin modal
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [isFetchingData, setIsFetchingData] = useState(false); // New loading state for data fetching
 
   useEffect(() => {
-    // Fetch dữ liệu biểu đồ từ API lcount
-    const fetchChartData = async () => {
+    if (!user) {
+      alert('Bạn cần đăng nhập để thanh toán!');
+      return;
+    }
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/lcount');
-        const json = await response.json();
+        setIsFetchingData(true);
 
-        const formattedData = Object.values(json.data).map(item => ({
+        // Fetch user details
+        const userResponse = await fetch('http://localhost:3000/api/users/session', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const userData = await userResponse.json();
+        setUserDetails(userData);
+
+        // Fetch chart data
+        const chartResponse = await fetch('/api/lcount');
+        const chartJson = await chartResponse.json();
+        const formattedChartData = Object.values(chartJson.data).map(item => ({
           location_name: item.location_name,
           order_count: item.order_count,
         }));
+        setChartData(formattedChartData);
 
-        setChartData(formattedData);
-      } catch (error) {
-        console.error("Error fetching chart data:", error);
-      }
-    };
-
-    // Fetch dữ liệu danh sách địa điểm từ API location
-    const fetchLocationData = async () => {
-      try {
-        const response = await fetch('/api/locations');
-        const json = await response.json();
-
-        const formattedLocationData = Object.values(json).map(item => ({
+        // Fetch location data
+        const locationResponse = await fetch('/api/locations');
+        const locationJson = await locationResponse.json();
+        const formattedLocationData = Object.values(locationJson).map(item => ({
           id: item.id,
           name: item.name,
           description: item.description,
         }));
-
         setLocations(formattedLocationData);
+
       } catch (error) {
-        console.error("Error fetching location data:", error);
+        setError("Lỗi khi tải dữ liệu");
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsFetchingData(false);  // Stop loading
       }
     };
 
-    fetchChartData();
-    fetchLocationData();
-    setLoading(false);
+    fetchData();
   }, []);
 
   const handleDelete = async (id) => {
@@ -80,7 +94,7 @@ const ManageAirports = () => {
       try {
         const response = await axios.delete(`/admin/locations/${id}`);
         alert(response.data.message);
-        setLocations(locations.filter(location => location.id !== id)); // Cập nhật lại danh sách địa điểm
+        setLocations(prevLocations => prevLocations.filter(location => location.id !== id)); // Remove the deleted location
       } catch (error) {
         alert('Lỗi khi xóa địa điểm');
       }
@@ -91,7 +105,7 @@ const ManageAirports = () => {
     setSelectedLocation(location);
     setName(location.name);
     setDescription(location.description);
-    setOpenDialog(true); // Mở modal chỉnh sửa
+    setOpenDialog(true); // Open the update modal
   };
 
   const handleCloseDialog = () => {
@@ -109,19 +123,19 @@ const ManageAirports = () => {
     try {
       const response = await axios.put(`/admin/locations/${selectedLocation.id}`, { name, description });
       alert(response.data.message);
-      setLocations(locations.map(location => 
+      setLocations(prevLocations => prevLocations.map(location => 
         location.id === selectedLocation.id 
         ? { ...location, name, description }
         : location
       ));
-      handleCloseDialog(); // Đóng modal sau khi cập nhật
+      handleCloseDialog(); // Close the dialog after successful update
     } catch (error) {
       alert('Lỗi khi cập nhật địa điểm');
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (isFetchingData) {
+    return <div style={{ textAlign: 'center' }}><CircularProgress /></div>; // Show loading spinner
   }
 
   return (
@@ -130,7 +144,6 @@ const ManageAirports = () => {
       <p>Trang quản lý sân bay sẽ được hiển thị ở đây.</p>
 
       <DashboardContainer>
-        {/* Biểu đồ cột */}
         <ChartContainer>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
@@ -153,7 +166,6 @@ const ManageAirports = () => {
           </ResponsiveContainer>
         </ChartContainer>
 
-        {/* Bảng danh sách địa điểm */}
         <TableContainer>
           <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -171,27 +183,15 @@ const ManageAirports = () => {
                   <td>{location.name}</td>
                   <td>{location.description}</td>
                   <td>
-                    {/* Biểu tượng Cập nhật */}
                     <button
                       onClick={() => handleUpdate(location)}
-                      style={{
-                        marginRight: '10px',
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer'
-                      }}
+                      style={{ marginRight: '10px', background: 'transparent', border: 'none', cursor: 'pointer' }}
                     >
                       <EditIcon />
                     </button>
-                    {/* Biểu tượng Xóa */}
                     <button
                       onClick={() => handleDelete(location.id)}
-                      style={{
-                        background: 'transparent',
-                        color: 'red',
-                        border: 'none',
-                        cursor: 'pointer'
-                      }}
+                      style={{ background: 'transparent', color: 'red', border: 'none', cursor: 'pointer' }}
                     >
                       <DeleteIcon />
                     </button>
@@ -203,7 +203,6 @@ const ManageAirports = () => {
         </TableContainer>
       </DashboardContainer>
 
-      {/* Dialog chỉnh sửa địa điểm */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Cập nhật địa điểm</DialogTitle>
         <DialogContent>
@@ -225,12 +224,8 @@ const ManageAirports = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Hủy
-          </Button>
-          <Button onClick={handleSaveUpdate} color="primary">
-            Lưu
-          </Button>
+          <Button onClick={handleCloseDialog} color="primary">Hủy</Button>
+          <Button onClick={handleSaveUpdate} color="primary">Lưu</Button>
         </DialogActions>
       </Dialog>
     </div>

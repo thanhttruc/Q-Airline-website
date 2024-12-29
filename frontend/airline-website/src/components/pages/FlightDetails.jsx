@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-
+import { useCart } from '../../context/CartContext'; // Import useCart
 import '../../styles/flightdetails.css'; 
 import travel1 from '../../assets/image/4.jpg';
 import travel2 from '../../assets/image/2.jpg';
@@ -19,6 +19,7 @@ const FlightDetails = () => {
   const { flight_code } = useParams();
   const [flight, setFlight] = useState(null);
   const navigate = useNavigate();
+  const { addToCart } = useCart(); // Sử dụng useCart để thêm chuyến bay vào giỏ hàng
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/flights/${flight_code}`)
@@ -36,6 +37,14 @@ const FlightDetails = () => {
 
   // Lấy giá vé từ vé đầu tiên
   const ticketPrice = flight.tickets && flight.tickets[0]?.price;
+
+  // Hàm xử lý thêm chuyến bay vào giỏ hàng
+  const handleAddToCart = () => {
+    if (ticketPrice) {
+      addToCart(flight, 1, ticketPrice); // Giả sử mỗi lần thêm vào giỏ hàng là 1 vé
+      alert(`${flight.flight_code} đã được thêm vào giỏ hàng!`);
+    }
+  };
 
   return (
     <div className="flight-details-container">
@@ -76,18 +85,14 @@ const FlightDetails = () => {
         <div className="flight-info-right">
           <div className="flight-info-item">
             <span className="info-label">Khởi hành:</span>
-            <span className="info-value">
-              {flight.departure.location}
-            </span>
+            <span className="info-value">{flight.departure.location}</span>
             <span className="info-time">
               {flight.departure?.time ? new Date(flight.departure.time).toLocaleString() : 'N/A'}
             </span>
           </div>
           <div className="flight-info-item">
             <span className="info-label">Đến:</span>
-            <span className="info-value">
-              {flight.arrival.location}
-            </span>
+            <span className="info-value">{flight.arrival.location}</span>
             <span className="info-time">
               {flight.arrival?.time ? new Date(flight.arrival.time).toLocaleString() : 'N/A'}
             </span>
@@ -97,6 +102,11 @@ const FlightDetails = () => {
 
       <button className="view__all" onClick={() => navigate('/booking', { state: { flight } })}>
         Đặt vé
+      </button>
+
+      {/* Thêm vào giỏ hàng */}
+      <button className="view__all" onClick={handleAddToCart}>
+        Thêm vào giỏ hàng
       </button>
     </div>
   );

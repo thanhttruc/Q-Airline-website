@@ -47,6 +47,25 @@ router.get('/prices/:flightId/:ticketTypeId', async (req, res) => {
     res.status(500).json({ message: 'Lỗi khi lấy thông tin giá vé.' });
   }
 });
+
+// Cập nhật trạng thái và thời gian khởi hành chuyến bay
+// Cập nhật thời gian khởi hành và tự động thay đổi trạng thái thành "Delayed"
+router.put('/flights/:flight_code', async (req, res) => {
+  const { flight_code } = req.params;
+  const { newDepartureTime } = req.body;  // Lấy thời gian khởi hành mới từ request
+
+  try {
+    // Cập nhật thời gian khởi hành và trạng thái chuyến bay trong DB
+    const updatedFlight = await flightModel.updateFlightDepartureTime(flight_code, newDepartureTime);
+    if (!updatedFlight) {
+      return res.status(404).json({ error: 'Flight not found' });
+    }
+    res.status(200).json(updatedFlight);  // Trả về thông tin chuyến bay đã được cập nhật
+  } catch (err) {
+    console.error('Error updating flight:', err);
+    res.status(500).json({ error: 'Failed to update flight' });
+  }
+});
 // API để lấy tất cả máy bay
 router.get('/airplanes', async (req, res) => {
   try {

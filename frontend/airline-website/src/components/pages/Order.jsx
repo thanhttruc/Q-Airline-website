@@ -8,6 +8,7 @@ const Order = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch orders based on user ID
   const fetchOrders = async () => {
     if (!user) {
       return; // Nếu chưa đăng nhập, không thực hiện API
@@ -35,22 +36,36 @@ const Order = () => {
   };
 
   useEffect(() => {
-    fetchOrders();
+    fetchOrders(); // Fetch orders when component mounts
   }, [user]);
 
   // Hàm xóa đơn hàng
   const handleDeleteOrder = async (orderId) => {
     try {
-      const res = await fetch(`http://localhost:3000/api/booking/${orderId}/1`, {
-        method: 'DELETE',
-        credentials: 'include',
+      // Fetch user_id from /api/users/session before making the DELETE request
+      const userRes = await fetch('http://localhost:3000/api/users/session', {
+        method: 'GET',
+        credentials: 'include', // Include cookies for session management
       });
 
-      if (res.ok) {
-        alert('Đơn hàng đã được xóa thành công!');
-        await fetchOrders(); // Gọi lại hàm fetchOrders để cập nhật danh sách đơn hàng
+      if (userRes.ok) {
+        const userData = await userRes.json();
+        const user_id = userData.id; // Get user_id from the session response
+
+        // Use the fetched user_id in the DELETE request
+        const res = await fetch(`http://localhost:3000/api/booking/${user_id}/${orderId}/`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          alert('Đơn hàng đã được xóa thành công!');
+          await fetchOrders(); // Gọi lại hàm fetchOrders để cập nhật danh sách đơn hàng
+        } else {
+          throw new Error('Không thể xóa đơn hàng');
+        }
       } else {
-        throw new Error('Không thể xóa đơn hàng');
+        throw new Error('Không thể lấy thông tin người dùng');
       }
     } catch (error) {
       alert(`Lỗi: ${error.message}`);

@@ -124,11 +124,8 @@ router.put('/airplanes/:id', async (req, res) => {
 // API để xóa máy bay
 router.delete('/airplanes/:id', async (req, res) => {
 
-  let { id } = req.params;  // Lấy ID từ tham số URL
+  const { id } = req.params;  // Lấy ID từ tham số URL
   // Nếu không có ID trong URL, kiểm tra trong request body
-  if (!id && req.body && req.body.id) {
-    id = req.body.id;
-  }
   try {
     const result = await airplaneModel.deleteAirplane(id); // Xóa máy bay theo ID
     if (result.affectedRows > 0) {
@@ -200,70 +197,29 @@ router.delete('/locations/:id', async (req, res) => {
 // Route xử lý đăng bài khuyến mại
 // Route xử lý đăng bài khuyến mãi
 router.post('/promotions', async (req, res) => {
-  const { title, description, start_date, end_date, image } = req.body; // Lấy dữ liệu từ yêu cầu
-
-  console.log('Data received in POST request:', req.body);
+  const { title, description, start_date, end_date, image } = req.body;
 
   // Kiểm tra dữ liệu đầu vào
   if (!title || !description || !start_date || !end_date || !image) {
-    return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
+    return res.status(400).json({ message: 'All fields are required.' });
   }
 
   try {
-    // Tạo ID cho khuyến mãi
-    const promotionId = Date.now();  // Tạo id tạm thời cho khuyến mãi
-    const descriptionURL = `http://localhost:3002/admin/promotion/${promotionId}`;  // Tạo link mô tả
+    // Gọi đến mô hình để thêm khuyến mãi
+    const newPromotion = await createPromotion({ title, description, start_date, end_date, image });
 
-    // Gửi dữ liệu khuyến mãi vào cơ sở dữ liệu
-    const promotion = await createPromotion({
-      title,
-      description: descriptionURL,  // Mô tả dưới dạng URL
-      start_date,
-      end_date,
-      image // Lưu URL ảnh
-    });
-
-    // Trả về thông tin khuyến mãi vừa được tạo
+    // Trả về phản hồi thành công
     res.status(201).json({
-      message: 'Khuyến mãi đã được đăng thành công',
-      promotion: {
-        id: promotion.id,
-        title: promotion.title,
-        description: descriptionURL,  // Mô tả là URL
-        start_date: promotion.start_date,
-        end_date: promotion.end_date,
-        image: promotion.image // Đây là URL hình ảnh đã được gửi
-      }
+      message: 'Promotion added successfully.',
+      promotion: newPromotion,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Lỗi khi đăng khuyến mãi', error: error.message });
+    res.status(500).json({ message: 'Error adding promotion.' });
   }
 });
 
-// Route xử lý cập nhật bài khuyến mại
-router.put('/promotions/:id', async (req, res) => {
-  const promotionId = req.params.id;
-  const { title, description, start_date, end_date, image, status } = req.body;
 
-  // Kiểm tra dữ liệu đầu vào
-  if (!title || !description || !start_date || !end_date || !status) {
-    return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin' });
-  }
-
-  try {
-    // Gọi hàm cập nhật khuyến mãi
-    const updatedPromotion = await updatePromotion(promotionId, { title, description, start_date, end_date, image, status });
-
-    if (updatedPromotion.affectedRows > 0) {
-      res.status(200).json({ message: 'Khuyến mãi đã được cập nhật thành công', promotionId });
-    } else {
-      res.status(404).json({ message: 'Không tìm thấy khuyến mãi để cập nhật' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Lỗi khi cập nhật khuyến mãi', error: error.message });
-  }
-});
 // Route xử lý xóa bài khuyến mại
 router.delete('/promotions/:id', async (req, res) => {
   const promotionId = req.params.id;
@@ -282,39 +238,11 @@ router.delete('/promotions/:id', async (req, res) => {
   }
 });
 
-// Route to serve dynamic promotion page by description (URL)
-router.get('/promotion/:description', async (req, res) => {
-  const { description } = req.params; // Description is the URL we stored in the database
 
-  try {
-    const promotion = await getPromotionByUrl(description); // Fetch promotion from DB by description
-    if (promotion) {
-      const { title, start_date, end_date, image, id } = promotion;
-
-      // Check if the HTML file exists (optional: this depends on how you store the HTML)
-      const promotionFilePath = path.join(__dirname, '..', 'promotion_pages', `${id}.html`);
-      
-      if (fs.existsSync(promotionFilePath)) {
-        // If the HTML file exists, serve it
-        const htmlContent = fs.readFileSync(promotionFilePath, 'utf8');  // Read the HTML file
-        res.send(htmlContent);
-      } else {
-        // If the file doesn't exist, generate the HTML dynamically and serve it
-        const htmlContent = generatePromotionPage(title, start_date, end_date, image);
-        res.send(htmlContent);
-      }
-    } else {
-      res.status(404).send('<h1>Promotion not found</h1>');
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('<h1>Internal Server Error</h1>');
-  }
-});
 // Lấy tất cả vouchers
 
 // Cập nhật trạng thái voucher
-router.put('/vouchers/:id/status', async (req, res) => {
+router.put('/vouchers/:id', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   

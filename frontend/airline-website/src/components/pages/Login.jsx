@@ -46,7 +46,14 @@ const Login = () => {
           dispatch({ type: "LOGIN_SUCCESS", payload: user.user });
       console.log('Thông tin người dùng:', user.user);
           // Chuyển hướng đến trang chủ sau khi đăng nhập thành công
+           // Kiểm tra nếu người dùng là admin
+        if (user.user.role === 'admin') {
+          // Nếu là admin, chuyển hướng đến trang /admin/dashboard
+          navigate("/admin/dashboard");
+        } else {
+          // Nếu không phải admin, chuyển hướng đến trang home
           navigate("/home");
+        }
         } else {
           setError("Đăng nhập thất bại, vui lòng thử lại.");
           dispatch({ type: "LOGIN_FAILURE", payload: "Đăng nhập thất bại" });

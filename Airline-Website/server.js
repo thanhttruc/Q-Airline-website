@@ -51,11 +51,13 @@ app.post('/upload', upload.single('image'), (req, res) => {
 // Cấu hình Express để phục vụ các tệp tĩnh từ thư mục public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Cấu hình session
 app.use(session({
-  secret: 'your_secret_key',  
-  resave: false,
-  saveUninitialized: true
+  secret: 'your_secret_key',  // Mã bí mật để mã hóa session ID
+  resave: false,              // Không lưu lại session nếu không có thay đổi
+  saveUninitialized: true,    // Lưu session ngay cả khi chưa có giá trị
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 30,  // Thời gian sống của cookie (30 ngày trong ví dụ)
+  }
 }));
 const cors = require('cors');
 
@@ -131,7 +133,7 @@ const port = 3000;
 const server = app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
+ 
 // Lắng nghe tín hiệu SIGINT để dọn dẹp dữ liệu và đóng server
 process.on('SIGINT', async () => {
   console.log('Received SIGINT. Clearing data and shutting down...');

@@ -1,0 +1,88 @@
+.cart-page-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .cart-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .cart-summary {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .cart-item span {
+    font-size: 16px;
+  }
+  
+  .voucher-section {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+  }
+  
+  .voucher-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .voucher-item {
+    padding: 10px;
+    background-color: #e0f7fa;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .voucher-item:hover {
+    background-color: #b2ebf2;
+  }
+  
+  .voucher-item.selected {
+    background-color: #80deea;
+  }
+  
+  .apply-button {
+    width: 100%;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  .apply-button:hover {
+    background-color: #45a049;
+  }
+  
+  .total-price {
+    font-size: 20px;
+    font-weight: bold;
+  }
+.MuiChip-root {
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Khi chip được chọn */
+  .MuiChip-root.MuiChip-colorPrimary {
+    background-color: #1976d2 !important;
+    color: white;
+    }
+
+  
+  

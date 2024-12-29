@@ -168,7 +168,84 @@ async function createOrder(userId, totalPrice, orderDetails, voucherCode) {
   }
 }
 
+//
+const createNewOrder = async (userId, totalPrice, orderDetails, voucherCode) => {
+  const connection = await connectDB();
+  try {
+    let voucherId = null;
+    if (voucherCode) {
+      const [voucher] = await connection.query(
+        'SELECT * FROM vouchers WHERE code = ? AND status = "Active" AND expiration_date > NOW()',
+        [voucherCode]
+      );
 
+      if (voucher.length > 0) {
+        voucherId = voucher[0].id;
+
+        await connection.query(
+          'UPDATE vouchers SET status = "Used" WHERE id = ?',
+          [voucherId]
+        );
+      } else {
+        throw new Error('Voucher không hợp lệ hoặc đã hết hạn.');
+      }
+    }
+
+    await connection.beginTransaction(); // Start transaction
+
+    // Insert the new order
+    const [result] = await connection.query(
+      'INSERT INTO orders (user_id, total_price, status, voucher_id) VALUES (?, ?, "Completed", ?)',
+      [userId, totalPrice, voucherId]
+    );
+    
+    if (!result || !result.insertId) {
+      throw new Error('Failed to create the order. No insertId returned.');
+    }
+
+    const orderId = result.insertId; // Get the orderId from the insert result
+    console.log('Order created with ID:', orderId); // Debugging log
+
+    // Insert order details
+    for (const item of orderDetails) {
+      const [flight] = await connection.query(
+        'SELECT id FROM flights WHERE flight_code = ?',
+        [item.flightCode]
+      );
+
+      if (flight.length === 0) {
+        throw new Error(`Chuyến bay với mã ${item.flightCode} không tồn tại.`);
+      }
+
+      const flightId = flight[0].id;
+
+      await connection.query(
+        'INSERT INTO order_details (order_id, flight_id, ticket_type_id, quantity, price_id) VALUES (?, ?, ?, ?, ?)',
+        [orderId, flightId, item.ticketTypeId, item.quantity, item.priceId]
+      );
+
+      const [airplaneId] = await connection.query(
+        'SELECT airplane_id FROM flights WHERE flight_code = ?',
+        [item.flightCode]
+      );
+      if (airplaneId.length > 0) {
+        await connection.query(
+          'UPDATE airplanes SET seat_count = seat_count - ? WHERE id = ?',
+          [item.quantity, airplaneId[0].airplane_id]
+        );
+      } else {
+        throw new Error(`Không tìm thấy thông tin máy bay cho chuyến bay ${item.flightCode}`);
+      }
+    }
+
+    await connection.commit(); // Commit the transaction
+
+  } catch (error) {
+    await connection.rollback(); // Rollback on error
+    console.error('Error during order creation:', error); // Log the error
+    throw error; // Rethrow the error for further handling
+  }
+};
 
 // Lấy chi tiết đơn hàng theo user_id
 async function getOrderDetailsByUserId(userId) {
@@ -217,4 +294,4 @@ async function getOrderDetailsByUserId(userId) {
   }
 }
 
-module.exports = { getAllOrders, createOrder, getOrderDetailsByUserId ,updateWhenCancelOrder};
+module.exports = { getAllOrders, createOrder, createNewOrder, getOrderDetailsByUserId ,updateWhenCancelOrder};

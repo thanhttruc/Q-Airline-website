@@ -144,6 +144,30 @@ async function getFlightByCode(flight_code) {
     return null;
   }
 }
+
+// Hàm cập nhật thời gian khởi hành và trạng thái chuyến bay thành "Delayed"
+async function updateFlightDepartureTime(flightCode, newDepartureTime) {
+  const connection = await connectDB();
+
+  const query = `
+    UPDATE flights 
+    SET departure_time = ?, status = 'Delayed'
+    WHERE flight_code = ?
+  `;
+  
+  try {
+    const [result] = await connection.query(query, [newDepartureTime, flightCode]);
+    if (result.affectedRows > 0) {
+      // Lấy lại thông tin chuyến bay sau khi cập nhật
+      const [rows] = await connection.query('SELECT * FROM flights WHERE flight_code = ?', [flightCode]);
+      return rows[0];
+    }
+    return null;
+  } catch (err) {
+    console.error('Error updating flight in DB:', err);
+    throw err;
+  }
+}
 module.exports = {
-  getFlightByCode, getAllFlights
+  getFlightByCode, getAllFlights, updateFlightDepartureTime
 };

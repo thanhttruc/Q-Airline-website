@@ -122,7 +122,7 @@ const Vouchers = () => {
 
     try {
       // Send PUT request to update voucher status
-      const response = await fetch(`http://localhost:3000/admin/vouchers/${id}/status`, {
+      const response = await fetch(`http://localhost:3000/admin/vouchers/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

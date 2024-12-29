@@ -1,248 +1,157 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, CircularProgress } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, Snackbar } from '@mui/material';
 
-function ManageTicketPrices() {
-  const [prices, setPrices] = useState([]);
-  const [newPrice, setNewPrice] = useState({
-    flight_id: '',
-    ticket_type_id: '',
-    price: '',
-  });
-  const [editingPrice, setEditingPrice] = useState(null);
+const FlightList = () => {
   const [flights, setFlights] = useState([]);
-  const [ticketTypes, setTicketTypes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch all ticket prices, flights, and ticket types on component mount
+  const [openDialog, setOpenDialog] = useState(false); // Để mở/đóng dialog
+  const [selectedFlight, setSelectedFlight] = useState(null); // Để lưu thông tin chuyến bay đang chọn
+  const [newDepartureTime, setNewDepartureTime] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
   useEffect(() => {
-    fetchPrices();
+    const fetchFlights = async () => {
+      try {
+        const response = await axios.get('/api/flights'); // Lấy danh sách chuyến bay
+        setFlights(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    };
+
     fetchFlights();
-    fetchTicketTypes();
   }, []);
 
-  // Fetch all ticket prices from the backend
-  const fetchPrices = async () => {
-    try {
-      const response = await axios.get('/api/prices');
-      console.log('Prices response:', response.data);
-      setPrices(response.data);
-    } catch (error) {
-      console.error('Error fetching prices:', error);
-      setPrices([]);
+  const handleDelay = async () => {
+    if (selectedFlight && newDepartureTime) {
+      try {
+        // Gọi API PUT để cập nhật thời gian khởi hành và trạng thái chuyến bay thành "Delayed"
+        const response = await axios.put(`http://localhost:3000/api/flights/${selectedFlight.flight_code}`, {
+          newDepartureTime,  // Thời gian khởi hành mới
+        });
+
+        // Cập nhật lại danh sách chuyến bay sau khi cập nhật thành công
+        const updatedFlights = flights.map(flight =>
+          flight.flight_code === selectedFlight.flight_code
+            ? { ...flight, status: 'Delayed', departure: { ...flight.departure, time: newDepartureTime } }
+            : flight
+        );
+        setFlights(updatedFlights);  // Cập nhật trạng thái và thời gian chuyến bay
+        setSnackbarMessage('Flight updated successfully');
+        setOpenSnackbar(true);
+        setOpenDialog(false); // Đóng dialog sau khi thành công
+      } catch (err) {
+        console.error('Error updating flight status:', err);
+        setSnackbarMessage('Failed to update flight');
+        setOpenSnackbar(true);
+      }
+    } else {
+      setSnackbarMessage('Please select a valid time');
+      setOpenSnackbar(true);
     }
   };
 
-  // Fetch all flights from the backend
-  const fetchFlights = async () => {
-    try {
-      const response = await axios.get('/api/flights');
-      setFlights(response.data);
-    } catch (error) {
-      console.error('Error fetching flights:', error);
-    }
+  if (loading) return <p>Loading flights...</p>;
+  if (error) return <p>Error fetching flights: {error.message}</p>;
+
+  const tableStyle = {
+    width: '100%',
+    borderCollapse: 'collapse',
   };
 
-  // Fetch all ticket types from the backend
-  const fetchTicketTypes = async () => {
-    try {
-      const response = await axios.get('/api/ticket-types');
-      setTicketTypes(response.data);
-    } catch (error) {
-      console.error('Error fetching ticket types:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Handle the creation of a new price
-  const handleCreatePrice = async () => {
-    try {
-      const response = await axios.post('/api/prices', newPrice);
-      setPrices([...prices, response.data]);
-      setNewPrice({ flight_id: '', ticket_type_id: '', price: '' });
-    } catch (error) {
-      console.error('Error creating price:', error);
-    }
-  };
-
-  // Handle editing a price
-  const handleEditPrice = (price) => {
-    setEditingPrice({ ...price });
-  };
-
-  const handleUpdatePrice = async () => {
-    try {
-      const response = await axios.put(`/api/prices/${editingPrice.id}`, editingPrice);
-      setPrices(prices.map((price) => (price.id === editingPrice.id ? response.data : price)));
-      setEditingPrice(null);
-    } catch (error) {
-      console.error('Error updating price:', error);
-    }
-  };
-
-  // Handle deleting a price
-  const handleDeletePrice = async (id) => {
-    try {
-      await axios.delete(`/api/prices/${id}`);
-      setPrices(prices.filter((price) => price.id !== id));
-    } catch (error) {
-      console.error('Error deleting price:', error);
-    }
+  const thTdStyle = {
+    padding: '10px',
+    textAlign: 'left',
+    border: '1px solid #ddd',
   };
 
   return (
     <div>
-      <h2>Quản lý vé đặt</h2>
+      <h1>Flight Schedule</h1>
+      <table style={tableStyle}>
+        <thead>
+          <tr>
+            <th style={thTdStyle}>Flight Code</th>
+            <th style={thTdStyle}>Departure Location</th>
+            <th style={thTdStyle}>Arrival Location</th>
+            <th style={thTdStyle}>Departure Time</th>
+            <th style={thTdStyle}>Arrival Time</th>
+            <th style={thTdStyle}>Airline</th>
+            <th style={thTdStyle}>Status</th>
+            <th style={thTdStyle}>Delay</th>
+          </tr>
+        </thead>
+        <tbody>
+          {flights.map(flight => (
+            <tr key={flight.flight_code}>
+              <td style={thTdStyle}>{flight.flight_code}</td>
+              <td style={thTdStyle}>{flight.departure.location}</td>
+              <td style={thTdStyle}>{flight.arrival.location}</td>
+              <td style={thTdStyle}>{new Date(flight.departure.time).toLocaleString()}</td>
+              <td style={thTdStyle}>{new Date(flight.arrival.time).toLocaleString()}</td>
+              <td style={thTdStyle}>{flight.airline}</td>
+              <td style={thTdStyle}>
+                <span style={{ color: flight.status === 'Scheduled' ? 'green' : 'red' }}>
+                  {flight.status}
+                </span>
+              </td>
+              <td style={thTdStyle}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setSelectedFlight(flight); // Chọn chuyến bay
+                    setOpenDialog(true); // Mở dialog
+                  }}
+                >
+                  Delay
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-      {/* Create New Price */}
-      <div>
-        <h3>Thêm giá vé mới</h3>
-        
-        {/* Flight ID Selection */}
-        <FormControl fullWidth margin="normal" variant="outlined">
-          <InputLabel>Chọn Flight ID</InputLabel>
-          <Select
-            value={newPrice.flight_id}
-            onChange={(e) => setNewPrice({ ...newPrice, flight_id: e.target.value })}
-            label="Chọn Flight ID"
-          >
-            {flights.map((flight) => (
-              <MenuItem key={flight.id} value={flight.id}>
-                {flight.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* Ticket Type ID Selection */}
-        <FormControl fullWidth margin="normal" variant="outlined">
-          <InputLabel>Chọn Ticket Type ID</InputLabel>
-          <Select
-            value={newPrice.ticket_type_id}
-            onChange={(e) => setNewPrice({ ...newPrice, ticket_type_id: e.target.value })}
-            label="Chọn Ticket Type ID"
-          >
-            {ticketTypes.map((ticketType) => (
-              <MenuItem key={ticketType.id} value={ticketType.id}>
-                {ticketType.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        {/* Price Input */}
-        <TextField
-          label="Price"
-          type="number"
-          value={newPrice.price}
-          onChange={(e) => setNewPrice({ ...newPrice, price: e.target.value })}
-          fullWidth
-          margin="normal"
-        />
-
-        {/* Submit Button */}
-        <Button onClick={handleCreatePrice} variant="contained" color="primary">
-          Thêm giá vé
-        </Button>
-      </div>
-
-      {/* List of Prices */}
-      <div>
-        <h3>Danh sách giá vé</h3>
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Flight ID</th>
-                <th>Ticket Type ID</th>
-                <th>Price</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {prices.length > 0 ? (
-                prices.map((price) => (
-                  <tr key={price.id}>
-                    <td>{price.id}</td>
-                    <td>{price.flight_id}</td>
-                    <td>{price.ticket_type_id}</td>
-                    <td>{price.price}</td>
-                    <td>
-                      <Button onClick={() => handleEditPrice(price)} variant="outlined" color="primary">Chỉnh sửa</Button>
-                      <Button onClick={() => handleDeletePrice(price.id)} variant="outlined" color="secondary">Xóa</Button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr><td colSpan="5">Không có giá vé nào</td></tr>
-              )}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* Edit Price Modal */}
-      {editingPrice && (
-        <div>
-          <h3>Chỉnh sửa giá vé</h3>
-          
-          {/* Flight ID Selection */}
-          <FormControl fullWidth margin="normal" variant="outlined">
-            <InputLabel>Chọn Flight ID</InputLabel>
-            <Select
-              value={editingPrice.flight_id}
-              onChange={(e) => setEditingPrice({ ...editingPrice, flight_id: e.target.value })}
-              label="Chọn Flight ID"
-            >
-              {flights.map((flight) => (
-                <MenuItem key={flight.id} value={flight.id}>
-                  {flight.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {/* Ticket Type ID Selection */}
-          <FormControl fullWidth margin="normal" variant="outlined">
-            <InputLabel>Chọn Ticket Type ID</InputLabel>
-            <Select
-              value={editingPrice.ticket_type_id}
-              onChange={(e) => setEditingPrice({ ...editingPrice, ticket_type_id: e.target.value })}
-              label="Chọn Ticket Type ID"
-            >
-              {ticketTypes.map((ticketType) => (
-                <MenuItem key={ticketType.id} value={ticketType.id}>
-                  {ticketType.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {/* Price Input */}
+      {/* Dialog chọn thời gian delay */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Update Flight Departure Time</DialogTitle>
+        <DialogContent>
           <TextField
-            label="Price"
-            type="number"
-            value={editingPrice.price}
-            onChange={(e) => setEditingPrice({ ...editingPrice, price: e.target.value })}
+            label="New Departure Time"
+            type="datetime-local"
             fullWidth
-            margin="normal"
+            value={newDepartureTime}
+            onChange={(e) => setNewDepartureTime(e.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelay} color="primary" disabled={!newDepartureTime}>
+            Update
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-          {/* Update and Cancel Buttons */}
-          <Button onClick={handleUpdatePrice} variant="contained" color="primary">
-            Cập nhật
-          </Button>
-          <Button onClick={() => setEditingPrice(null)} variant="outlined" color="secondary">
-            Hủy
-          </Button>
-        </div>
-      )}
+      {/* Snackbar thông báo */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMessage}
+      />
     </div>
   );
-}
+};
 
-export default ManageTicketPrices;
+export default FlightList;

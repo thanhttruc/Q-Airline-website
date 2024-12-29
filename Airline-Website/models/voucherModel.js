@@ -20,11 +20,11 @@ async function getAllVouchers() {
 }
 
 // Update voucher status
-async function updateVoucherStatus(voucherCode, newStatus) {
+async function updateVoucherStatus(voucherid, newStatus) {
   const connection = await connectDB();
   const [result] = await connection.query(
-      'UPDATE vouchers SET status = ? WHERE code = ?',
-      [newStatus, voucherCode]
+      'UPDATE vouchers SET status = ? WHERE id = ?',
+      [voucherid, newStatus]
   );
   return result.affectedRows > 0; // Returns true if a row was updated
 }
@@ -60,9 +60,7 @@ async function deleteVoucher(id) {
     return result;
   } catch (error) {
     throw new Error('Error deleting voucher: ' + error.message);
-  } finally {
-    connection.end();
-  }
+  } 
 }
 
 module.exports = {

@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material'; // Import các thành phần cần thiết từ MUI
-
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material'; 
+import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 
 function ManageAirplanes() {
+  const { user } = useContext(AuthContext);
   const [airplanes, setAirplanes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
@@ -14,8 +15,12 @@ function ManageAirplanes() {
 
   // Hàm lấy dữ liệu máy bay từ API
   const fetchAirplanes = async () => {
+    if (!user) {
+      alert('Bạn cần đăng nhập để thanh toán!');
+      return;
+    }
     try {
-      const response = await fetch('/api/airplanes');  // Thay đổi endpoint nếu cần
+      const response = await fetch('http://localhost:3000/api/airplanes');  // Thay đổi endpoint nếu cần
       const data = await response.json();
 
       // Chuyển đối tượng máy bay thành mảng để dễ dàng render bảng
@@ -49,15 +54,15 @@ function ManageAirplanes() {
   const handleUpdateAirplane = async () => {
     if (selectedAirplane) {
       try {
-        const response = await axios.put(`/admin/airplanes/${selectedAirplane.id}`, selectedAirplane);
+        const response = await axios.put(`http://localhost:3000/admin/airplanes/${selectedAirplane.id}`, selectedAirplane);
         if (response.status === 200) {
           alert('Cập nhật máy bay thành công!');
           fetchAirplanes(); // Lấy lại danh sách máy bay
           handleCloseDialog();
+        } else {
+          console.error('Cập nhật không thành công, mã lỗi: ', response.status);
         }
       } catch (error) {
-        console.error('Error updating airplane:', error);
-        alert('Lỗi khi cập nhật máy bay');
       }
     }
   };
@@ -74,14 +79,15 @@ function ManageAirplanes() {
   // Hàm xóa máy bay
   const handleDeleteAirplane = async (id) => {
     try {
-      const response = await axios.delete(`/admin/airplanes/${id}`);
+      const response = await axios.delete(`http://localhost:3000/admin/airplanes/${id}`);
       if (response.status === 200) {
         alert('Xóa máy bay thành công!');
         fetchAirplanes(); // Lấy lại danh sách máy bay sau khi xóa
+      } else {
+        console.error('Xóa không thành công, mã lỗi: ', response.status);
       }
     } catch (error) {
       console.error('Error deleting airplane:', error);
-      alert('Lỗi khi xóa máy bay');
     }
   };
 
@@ -91,9 +97,7 @@ function ManageAirplanes() {
 
   return (
     <div>
-      <h2>
-        Quản lý mẫu máy bay
-      </h2>
+      <h2>Quản lý mẫu máy bay</h2>
 
       {/* Bảng hiển thị danh sách máy bay */}
       <TableContainer component={Paper}>

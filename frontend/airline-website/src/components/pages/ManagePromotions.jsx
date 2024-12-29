@@ -1,85 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { Editor, EditorState, RichUtils } from 'draft-js';
-import { Button, TextField } from '@mui/material';
-import { FormatBold, FormatItalic, FormatUnderlined, FormatColorText, InsertPhoto } from '@mui/icons-material';
-import { stateToHTML } from 'draft-js-export-html';
+import React, { useEffect, useState } from 'react';
+import { useContext} from 'react';
+import { Container, Grid, Card, CardContent, CardMedia, Typography, Button, Box, CircularProgress } from '@mui/material';
+import { AuthContext } from '../../context/AuthContext';
 
-const EditorPage = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [htmlContent, setHtmlContent] = useState("");
+// URL API
+const apiUrl = 'http://localhost:3000/api/users/promotions';
 
-  // Hàm để thay đổi trạng thái của Editor
-  const handleEditorChange = (state) => {
-    setEditorState(state);
-  };
-
-  // Hàm để xử lý các công cụ định dạng văn bản (bold, italic, underline)
-  const handleBold = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'BOLD'));
-  };
-  
-  const handleItalic = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'ITALIC'));
-  };
-
-  const handleUnderline = () => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, 'UNDERLINE'));
-  };
-
-  // Hàm lưu nội dung của editor dưới dạng HTML
-  const saveContent = () => {
-    const contentState = editorState.getCurrentContent();
-    const html = stateToHTML(contentState); // Chuyển nội dung sang HTML
-    setHtmlContent(html);
+function Promotions() {
+    const [promotions, setPromotions] = useState([]);
+    const [loading, setLoading] = useState(true);
+      const { user } = useContext(AuthContext);
     
-    // Tạo file HTML và link tải
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    
-    // Tạo liên kết và kích hoạt tải xuống
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'editor-content.html'; // Đặt tên cho file HTML
-    a.click();
-    URL.revokeObjectURL(url); // Giải phóng URL sau khi tải
-  };
 
-  return (
-    <div>
-      <div style={{ marginBottom: '20px' }}>
-        <Button onClick={handleBold} startIcon={<FormatBold />}>Bold</Button>
-        <Button onClick={handleItalic} startIcon={<FormatItalic />}>Italic</Button>
-        <Button onClick={handleUnderline} startIcon={<FormatUnderlined />}>Underline</Button>
-        {/* Các công cụ khác có thể thêm vào đây */}
-      </div>
+    // Lấy dữ liệu từ API
+    useEffect(() => {
+      if (!user) {
+        alert('Bạn cần đăng nhập để thanh toán!');
+        return;
+      }
+        async function fetchPromotions() {
+            try {
+                localStorage.clear();
+                const response = await fetch(apiUrl);
+                const data = await response.json();
 
-      <div style={{ border: '1px solid #ccc', minHeight: '200px', marginBottom: '20px', padding: '10px' }}>
-        <Editor 
-          editorState={editorState} 
-          onChange={handleEditorChange} 
-        />
-      </div>
+                // Kiểm tra kiểu dữ liệu và xử lý
+                if (Array.isArray(data)) {
+                    setPromotions(data);
+                } else if (typeof data === 'object') {
+                    const promotionsArray = Object.values(data); // Chuyển object thành array
+                    setPromotions(promotionsArray);
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy dữ liệu từ API:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
 
-      <Button variant="contained" color="primary" onClick={saveContent}>
-        Save Content
-      </Button>
+        fetchPromotions();
+    }, []);
 
-      {/* Hiển thị nội dung HTML nếu cần thiết */}
-      {htmlContent && (
-        <div style={{ marginTop: '20px' }}>
-          <TextField
-            label="HTML Content"
-            multiline
-            rows={6}
-            variant="outlined"
-            fullWidth
-            value={htmlContent}
-            disabled
-          />
-        </div>
-      )}
-    </div>
-  );
-};
+    return (
+        <Container sx={{ paddingTop: '2rem' }}>
+            <Typography variant="h4" gutterBottom>
+                Chương trình khuyến mãi
+            </Typography>
 
-export default EditorPage;
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <Grid container spacing={4}>
+                    {promotions.map((promotion) => (
+                        <Grid item xs={12} sm={6} md={4} key={promotion.id}>
+                            <Card>
+                                <CardMedia
+                                    component="img"
+                                    height="200"
+                                    image={promotion.image}
+                                    alt={promotion.title}
+                                />
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom>
+                                        {promotion.title}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary" paragraph>
+                                        <strong>Thời gian bắt đầu:</strong> {new Date(promotion.start_date).toLocaleString()}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary" paragraph>
+                                        <strong>Thời gian kết thúc:</strong> {new Date(promotion.end_date).toLocaleString()}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary" paragraph>
+                                        <strong>Trạng thái:</strong> {promotion.status}
+                                    </Typography>
+                                    <Button 
+                                        variant="contained" 
+                                        color="primary" 
+                                        href={promotion.description} 
+                                        target="_blank"
+                                        sx={{ marginTop: '1rem' }}
+                                    >
+                                        Xem chi tiết
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
+        </Container>
+    );
+}
+
+export default Promotions;

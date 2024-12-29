@@ -19,11 +19,19 @@ import ManagePromotions from '../pages/ManagePromotions';
 import ManageCreatePromotions from '../pages/ManageCreatePromotions';
 import ManageVouchers from '../pages/ManageVouchers';
 import ManageTicketPrices from '../pages/ManageTicketPrices';
+import PostPreview from '../pages/PostPreview';
+import DashboardPage from '../pages/DashboardPage'
+import CartPage from '../pages/CartPage';
+import CheckoutPage from '../pages/CheckoutPage';
+
+
+
 
 const Routers = () => {
   return (
     <Routes>
       <Route path="/admin/dashboard" element={<Dashboard />}>
+          <Route index element={<DashboardPage />} />
           {/* Các route con sẽ là các đường dẫn tương đối */}
           <Route path="manage-airports" element={<ManageAirports />} />
           <Route path="manage-orders" element={<ManageOrders />} />
@@ -32,11 +40,12 @@ const Routers = () => {
           <Route path="manage-create-promotions" element={<ManageCreatePromotions />} />
           <Route path="manage-vouchers" element={<ManageVouchers />} />
           <Route path="manage-ticket-prices" element={<ManageTicketPrices />} />
-
       </Route>
       
 
       <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="/post/:id" element={<PostPreview />} /> {/* Route động cho từng bài viết */}
+
 
       <Route path="/home" element={<Home />} />
       <Route path="/flight" element={<Flight />} />
@@ -47,8 +56,14 @@ const Routers = () => {
       <Route path="/register" element={<Register />} />
       <Route path='/flights/:flight_code' element={<FlightDetails />} />
       <Route path='/booking' element={<Booking />} />
+      <Route path="/cart" element={<CartPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
+
+
     </Routes>
   );
 };
+
+
 
 export default Routers;

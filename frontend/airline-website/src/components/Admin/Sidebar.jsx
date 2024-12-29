@@ -1,57 +1,81 @@
-import React, { useState, useEffect } from 'react'; 
-import { Link } from 'react-router-dom';
-import { List, ListItem, ListItemText, Avatar, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import "./Sidebar.css"
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
+import { List, ListItem, ListItemText, Avatar, Typography, Collapse, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress } from '@mui/material';
+import "./Sidebar.css";
 
 function Sidebar() {
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [openPage, setOpenPage] = useState("");  // State để lưu trang hiện tại
-  const [openDialog, setOpenDialog] = useState(false);  // State để điều khiển modal thêm địa điểm
-  const [locationName, setLocationName] = useState(""); // State lưu tên địa điểm
-  const [locationDescription, setLocationDescription] = useState(""); // State lưu mô tả địa điểm
+  const [openPage, setOpenPage] = useState("");  
+  const { user, dispatch } = useContext(AuthContext);  
+  const navigate = useNavigate();  
 
-  // States cho máy bay
-  const [airplaneCode, setAirplaneCode] = useState(""); // Mã máy bay
-  const [manufacturer, setManufacturer] = useState(""); // Nhà sản xuất
-  const [model, setModel] = useState(""); // Mẫu máy bay
-  const [seatCount, setSeatCount] = useState(""); // Số ghế
-  const [description, setDescription] = useState(""); // Mô tả máy bay
+  const [userDetails, setUserDetails] = useState(null); 
 
-  // Dialog cho máy bay
-  const [openAirplaneDialog, setOpenAirplaneDialog] = useState(false); // Mở/đóng dialog thêm máy bay
-
+  // Fetch thông tin người dùng và tự động cập nhật sau mỗi 10 giây
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUserDetails = async () => {
+      if (!user) {
+        setLoading(false); 
+        return;
+      }
+
       try {
-        const response = await fetch('/api/users/session');
-        const data = await response.json();
-        setUser(data);
+        const response = await fetch(`http://localhost:3000/api/users/session`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserDetails(data); 
+        } else {
+          throw new Error('Không thể lấy thông tin người dùng');
+        }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error('Lỗi khi lấy thông tin người dùng:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
-  }, []);
+    // Gọi API lần đầu tiên khi component load
+    fetchUserDetails();
+
+    // Tạo interval để tự động cập nhật thông tin người dùng mỗi 10 giây
+    const interval = setInterval(() => {
+      fetchUserDetails();
+    }, 10000); // 10000ms = 10 giây
+
+    // Dọn dẹp interval khi component bị unmount
+    return () => clearInterval(interval);
+  }, [user]); // Chạy lại mỗi khi user thay đổi
+
+  const [openDialog, setOpenDialog] = useState(false);  
+  const [locationName, setLocationName] = useState(""); 
+  const [locationDescription, setLocationDescription] = useState(""); 
+
+  // States cho máy bay
+  const [airplaneCode, setAirplaneCode] = useState(""); 
+  const [manufacturer, setManufacturer] = useState(""); 
+  const [model, setModel] = useState(""); 
+  const [seatCount, setSeatCount] = useState(""); 
+  const [description, setDescription] = useState(""); 
+
+  const [openAirplaneDialog, setOpenAirplaneDialog] = useState(false); 
 
   const handleToggle = (page) => {
-    setOpenPage(openPage === page ? "" : page);  // Toggle trang
+    setOpenPage(openPage === page ? "" : page);  
   };
 
-  // Hàm mở modal thêm địa điểm
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
 
-  // Hàm đóng modal thêm địa điểm
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
 
-  // Hàm lưu tên địa điểm và mô tả
   const handleSaveLocation = async () => {
     if (!locationName.trim() || !locationDescription.trim()) {
       alert("Vui lòng nhập tên và mô tả địa điểm.");
@@ -65,6 +89,7 @@ function Sidebar() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name: locationName, description: locationDescription }),
+        credentials: 'same-origin'
       });
 
       if (!response.ok) {
@@ -74,7 +99,6 @@ function Sidebar() {
       const data = await response.json();
       console.log('Địa điểm đã được thêm:', data);
 
-      // Reset lại tên địa điểm và mô tả, đồng thời đóng modal
       setLocationName("");
       setLocationDescription("");
       setOpenDialog(false);
@@ -86,17 +110,14 @@ function Sidebar() {
     }
   };
 
-  // Hàm mở modal thêm máy bay
   const handleOpenAirplaneDialog = () => {
     setOpenAirplaneDialog(true);
   };
 
-  // Hàm đóng modal thêm máy bay
   const handleCloseAirplaneDialog = () => {
     setOpenAirplaneDialog(false);
   };
 
-  // Hàm lưu mẫu máy bay mới
   const handleSaveAirplane = async () => {
     if (!airplaneCode.trim() || !manufacturer.trim() || !model.trim() || !seatCount.trim() || !description.trim()) {
       alert("Vui lòng nhập đầy đủ thông tin máy bay.");
@@ -116,6 +137,7 @@ function Sidebar() {
           seat_count: seatCount,
           description: description
         }),
+        credentials: 'same-origin'
       });
 
       if (!response.ok) {
@@ -125,7 +147,6 @@ function Sidebar() {
       const data = await response.json();
       console.log('Máy bay đã được thêm:', data);
 
-      // Reset lại các trường và đóng dialog
       setAirplaneCode("");
       setManufacturer("");
       setModel("");
@@ -140,8 +161,23 @@ function Sidebar() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      dispatch({ type: 'LOGOUT' });
+      navigate('/login');
+      alert("Đăng xuất thành công!");
+    } catch (error) {
+      console.error("Lỗi khi đăng xuất:", error);
+      alert("Đã xảy ra lỗi khi đăng xuất.");
+    }
+  };
+
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (
@@ -194,62 +230,58 @@ function Sidebar() {
         </Collapse>
 
         {/* Các menu khác */}
-          {/*Đơn hàng*/}
-          <ListItem button component={Link} to="manage-orders" >
+        <ListItem button component={Link} to="manage-orders" >
           <ListItemText primary="Quản lý đơn hàng" />
         </ListItem>
-    
 
-       {/* Các menu khác */}
-          {/*Đơn hàng*/}
-          <ListItem button component={Link} to="manage-ticket-prices" >
+        <ListItem button component={Link} to="manage-ticket-prices" >
           <ListItemText primary="Quản lý vé đặt" />
         </ListItem>
-      </List>
 
-      {/* Quan li khuyen mai */}
-      <ListItem button onClick={() => handleToggle("managePromotions")}>
+        <ListItem button onClick={() => handleToggle("managePromotions")}>
           <ListItemText primary="Quản lý khuyến mãi" />
         </ListItem>
         <Collapse in={openPage === "managePromotions"} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button component={Link} to="manage-promotions"className="sidebar-submenu">
+            <ListItem button component={Link} to="manage-promotions" className="sidebar-submenu">
               <ListItemText primary="Trang quản lý khuyến mãi" />
             </ListItem>
-            <ListItem button component={Link} to="manage-vouchers"className="sidebar-submenu">
+            <ListItem button component={Link} to="manage-vouchers" className="sidebar-submenu">
               <ListItemText primary="Kích hoạt Vouchers" />
             </ListItem>
-            <ListItem button component={Link} to="manage-create-promotions"className="sidebar-submenu">
+            <ListItem button component={Link} to="manage-create-promotions" className="sidebar-submenu">
               <ListItemText primary="Đăng bài khuyến mại" />
             </ListItem>
           </List>
         </Collapse>
-  
 
-      {/* Modal để thêm địa điểm */}
+        {/* Đăng xuất */}
+        <ListItem button onClick={handleLogout}>
+          <ListItemText primary="Đăng xuất" />
+        </ListItem>
+      </List>
+
+      {/* Dialog thêm địa điểm */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Thêm địa điểm mới</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus
-            margin="dense"
             label="Tên địa điểm"
-            fullWidth
             value={locationName}
             onChange={(e) => setLocationName(e.target.value)}
+            fullWidth
+            margin="normal"
           />
           <TextField
-            margin="dense"
             label="Mô tả"
-            fullWidth
             value={locationDescription}
             onChange={(e) => setLocationDescription(e.target.value)}
-            multiline
-            rows={4}
+            fullWidth
+            margin="normal"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
+          <Button onClick={handleCloseDialog} color="primary">
             Hủy
           </Button>
           <Button onClick={handleSaveLocation} color="primary">
@@ -258,51 +290,48 @@ function Sidebar() {
         </DialogActions>
       </Dialog>
 
-      {/* Modal để thêm mẫu máy bay */}
+      {/* Dialog thêm máy bay */}
       <Dialog open={openAirplaneDialog} onClose={handleCloseAirplaneDialog}>
         <DialogTitle>Thêm mẫu máy bay mới</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus
-            margin="dense"
             label="Mã máy bay"
-            fullWidth
             value={airplaneCode}
             onChange={(e) => setAirplaneCode(e.target.value)}
+            fullWidth
+            margin="normal"
           />
           <TextField
-            margin="dense"
             label="Nhà sản xuất"
-            fullWidth
             value={manufacturer}
             onChange={(e) => setManufacturer(e.target.value)}
+            fullWidth
+            margin="normal"
           />
           <TextField
-            margin="dense"
             label="Mẫu máy bay"
-            fullWidth
             value={model}
             onChange={(e) => setModel(e.target.value)}
+            fullWidth
+            margin="normal"
           />
           <TextField
-            margin="dense"
             label="Số ghế"
-            fullWidth
             value={seatCount}
             onChange={(e) => setSeatCount(e.target.value)}
+            fullWidth
+            margin="normal"
           />
           <TextField
-            margin="dense"
             label="Mô tả"
-            fullWidth
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            multiline
-            rows={4}
+            fullWidth
+            margin="normal"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAirplaneDialog} color="secondary">
+          <Button onClick={handleCloseAirplaneDialog} color="primary">
             Hủy
           </Button>
           <Button onClick={handleSaveAirplane} color="primary">
